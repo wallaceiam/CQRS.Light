@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DDD.Light.Repo.Contracts;
+using System.Threading.Tasks;
 
 namespace DDD.Light.Repo.InMemory
 {
@@ -19,9 +20,9 @@ namespace DDD.Light.Repo.InMemory
             return _db.FirstOrDefault(i => i.Id.Equals(id));
         }
 
-        public IEnumerable<TAggregate> GetAll()
+        public async Task<IEnumerable<TAggregate>> GetAll()
         {
-            return _db;
+            return await Task.FromResult<IEnumerable<TAggregate>>(_db);
         }
 
         public IQueryable<TAggregate> Get()

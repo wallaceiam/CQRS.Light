@@ -3,21 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using DDD.Light.Repo.Contracts;
 using MongoDB.Driver;
-using MongoDB.Driver.Builders;
-using MongoDB.Driver.Linq;
+using System.Threading.Tasks;
+using MongoDB.Bson;
 
 namespace DDD.Light.Repo.MongoDB
 {
     public class MongoRepository<TId, TAggregate> : IRepository<TId, TAggregate>
         where TAggregate : IEntity<TId> 
     {
-        private readonly MongoCollection<TAggregate> _collection;
+        private readonly  IMongoCollection<TAggregate> _collection;
 
         public MongoRepository(string connectionString, string databaseName, string collectionName)
         {
             var client = MongoPool.Instance.GetClient(connectionString);
-            var server = client.GetServer();
-            var database = server.GetDatabase(databaseName);
+            //var server = client..GetServer();
+            //var database = server.GetDatabase(databaseName);
+            var database = client.GetDatabase(databaseName);
             _collection = database.GetCollection<TAggregate>(collectionName);
         }
  
@@ -28,11 +29,11 @@ namespace DDD.Light.Repo.MongoDB
             throw new NotImplementedException();
         }
 
-        public IEnumerable<TAggregate> GetAll()
+        public async Task<IEnumerable<TAggregate>> GetAll()
         {
-            return _collection.FindAll();
+            return await _collection.Find(new BsonDocument()).ToListAsync();
         }
-        
+
         public IQueryable<TAggregate> Get()
         {
             return _collection.AsQueryable();

@@ -112,9 +112,9 @@ namespace DDD.Light.CQRS.InProcess
             return _eventStore;
         }
 
-        public void RestoreReadModel()
+        public async void RestoreReadModel()
         {
-            _eventStore.GetAll().ToList().ForEach(HandleRestoreReadModelEvent);
+            (await _eventStore.GetAll()).ToList().ForEach(HandleRestoreReadModelEvent);
         }
 
         public void RestoreReadModel(DateTime until)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using log4net;
+using System.Threading.Tasks;
 
 namespace DDD.Light.CQRS.InProcess
 {
@@ -44,6 +45,27 @@ namespace DDD.Light.CQRS.InProcess
                     throw;
                 }
             }
+        }
+
+        public Task CommitAsync()
+        {
+            while (NotProcessedActions.Count > 0)
+            {
+                var handler = NotProcessedActions.Dequeue();
+                try
+                {
+                    handler.Invoke(Message);
+                    ProcessedActions.Add(handler);
+                }
+                catch (Exception ex)
+                {
+                    ErroredOutActions.Add(handler, ex);
+                    LogFailedCommit();
+                    throw;
+                }
+            }
+
+            return Task.FromResult(0);
         }
 
         //TODO: better logging

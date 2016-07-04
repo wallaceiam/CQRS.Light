@@ -8,11 +8,11 @@ namespace DDD.Light.Repo.MongoDB
     {
         private static volatile MongoPool _instance;
         private static object token = new Object();
-        private readonly Dictionary<string, MongoClient> _mongoClients;
+        private readonly Dictionary<string, IMongoClient> _mongoClients;
 
         private MongoPool()
         {
-            _mongoClients = new Dictionary<string, MongoClient>();
+            _mongoClients = new Dictionary<string, IMongoClient>();
         }
 
         public static MongoPool Instance
@@ -31,7 +31,7 @@ namespace DDD.Light.Repo.MongoDB
             }
         }
 
-        public MongoClient GetClient(string connectionString)
+        public IMongoClient GetClient(string connectionString)
         {
             if (!_mongoClients.ContainsKey(connectionString))
             {

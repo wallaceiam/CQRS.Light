@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using DDD.Light.CQRS.Contracts;
 
 namespace DDD.Light.CQRS.InProcess
@@ -41,6 +42,16 @@ namespace DDD.Light.CQRS.InProcess
         {
             if (!Equals(command, default(T)))
                 new Transaction<T>(command, CommandHandlersDatabase<T>.Instance.Get().ToList()).Commit();
+        }
+
+        public Task DispatchAsync<T>(T command)
+        {
+            if (!Equals(command, default(T)))
+            {
+                var transaction = new Transaction<T>(command, CommandHandlersDatabase<T>.Instance.Get().ToList());
+                return transaction.CommitAsync();
+            }
+            return Task.FromResult(0);
         }
     }
 }

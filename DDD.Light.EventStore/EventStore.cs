@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using DDD.Light.EventStore.Contracts;
 using DDD.Light.Repo.Contracts;
+using System.Threading.Tasks;
 
 namespace DDD.Light.EventStore
 {
@@ -37,7 +38,7 @@ namespace DDD.Light.EventStore
         }
 
 
-        public IEnumerable<AggregateEvent> GetAll()
+        public Task<IEnumerable<AggregateEvent>> GetAll()
         {
             return _repo.GetAll();
         }
@@ -136,12 +137,12 @@ namespace DDD.Light.EventStore
             _repo.Save(aggregateEvent);
         }
 
-        public IEnumerable<TEvent> GetEvents<TEvent>()
+        public async Task<IEnumerable<TEvent>> GetEvents<TEvent>()
         {
             if (_serializationStrategy == null) throw new ApplicationException("Serialization Strategy is not configured");
 
             var deserializedEvents = new List<TEvent>();
-            var serializedEvents = GetAll().Where(e => Type.GetType(e.EventType) == typeof(TEvent)).ToList();
+            var serializedEvents = (await GetAll()).Where(e => Type.GetType(e.EventType) == typeof(TEvent)).ToList();
             serializedEvents.ForEach(s =>
                 {
                     var deserializedEvent = (TEvent)_serializationStrategy.DeserializeEvent(s.SerializedEvent, typeof (TEvent));
