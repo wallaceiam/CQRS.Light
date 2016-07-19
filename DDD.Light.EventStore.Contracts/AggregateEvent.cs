@@ -13,7 +13,7 @@ namespace DDD.Light.EventStore.Contracts
 //        public string SerializedEvent { get; set; }
 //    }
     
-    public class AggregateEvent : IEntity<Guid>
+    public class AggregateEvent : IEntity
     {
         public Guid Id { get; set; }
         public string AggregateType { get; set; }

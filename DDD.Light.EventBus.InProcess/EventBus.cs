@@ -61,7 +61,7 @@ namespace DDD.Light.EventBus.InProcess
                 if (!Equals(@event, default(TEvent)))
                     new Transaction<TEvent>(@event, EventHandlersDatabase<TEvent>.Instance.Get().ToList()).Commit();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw new ApplicationException("Transaction<T>(@event, EventHandlersDatabase<T>.Instance.Get().ToList()).Commit() failed");
             }

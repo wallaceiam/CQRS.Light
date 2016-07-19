@@ -64,7 +64,7 @@ namespace DDD.Light.CQRS.InProcess.Tests
 //            var mongoAggregateEventsRepository = new MongoRepository<AggregateEvent>("mongodb://localhost", "DDD_Light_Tests_EventStore", "EventStore");
 //            mongoAggregateEventsRepository.DeleteAll();
 
-            var inMemoryAggregateEventsRepository = new InMemoryRepository<Guid, AggregateEvent>();
+            var inMemoryAggregateEventsRepository = new InMemoryRepository<AggregateEvent>();
             inMemoryAggregateEventsRepository.DeleteAll();
 
             EventStore.EventStore.Instance.Configure(inMemoryAggregateEventsRepository, serializationStrategy);
@@ -80,9 +80,9 @@ namespace DDD.Light.CQRS.InProcess.Tests
                     {
                         return new MockHandler();
                     }
-                    if (type == typeof(IRepository<Guid, SomeAggregateRoot>))
+                    if (type == typeof(IRepository<SomeAggregateRoot>))
                     {
-                        return new InMemoryRepository<Guid, SomeAggregateRoot>();
+                        return new InMemoryRepository<SomeAggregateRoot>();
                     }
                     throw new Exception("type " + type.ToString() + " could not be resolved");
                 };
@@ -100,8 +100,9 @@ namespace DDD.Light.CQRS.InProcess.Tests
 
             // Assert
             Assert.AreEqual(1, EventStore.EventStore.Instance.Count());
-            Assert.AreEqual(typeof(SomeAggregateRootCreated), Type.GetType(EventStore.EventStore.Instance.GetAll().First().EventType));
-            Assert.AreEqual(createdMessage, ((SomeAggregateRootCreated)serializationStrategy.DeserializeEvent(EventStore.EventStore.Instance.GetAll().First().SerializedEvent, typeof(SomeAggregateRootCreated))).Message);
+            var firstEventType = EventStore.EventStore.Instance.GetAll().Result.First();
+            Assert.AreEqual(typeof(SomeAggregateRootCreated), Type.GetType(firstEventType.EventType));
+            Assert.AreEqual(createdMessage, ((SomeAggregateRootCreated)serializationStrategy.DeserializeEvent(firstEventType.SerializedEvent, typeof(SomeAggregateRootCreated))).Message);
         }
     }
 }

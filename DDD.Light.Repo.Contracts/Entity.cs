@@ -1,15 +1,17 @@
-﻿namespace DDD.Light.Repo.Contracts
+﻿using System;
+
+namespace DDD.Light.Repo.Contracts
 {
-    public abstract class Entity<TId> : IEntity<TId>
+    public abstract class Entity : IEntity
     {
-        public TId Id { get; set; }       
+        public Guid Id { get; set; }       
 
         protected Entity()
         {
             
         }
 
-        protected Entity(TId id)
+        protected Entity(Guid id)
         {
             Id = id;
         }

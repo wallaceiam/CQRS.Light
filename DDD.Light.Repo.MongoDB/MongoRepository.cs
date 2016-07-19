@@ -2,31 +2,27 @@
 using System.Collections.Generic;
 using System.Linq;
 using DDD.Light.Repo.Contracts;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Threading.Tasks;
-using MongoDB.Bson;
 
 namespace DDD.Light.Repo.MongoDB
 {
-    public class MongoRepository<TId, TAggregate> : IRepository<TId, TAggregate>
-        where TAggregate : IEntity<TId> 
+    public class MongoRepository<TAggregate> : IRepository<TAggregate>
+        where TAggregate : IEntity 
     {
         private readonly  IMongoCollection<TAggregate> _collection;
 
         public MongoRepository(string connectionString, string databaseName, string collectionName)
         {
             var client = MongoPool.Instance.GetClient(connectionString);
-            //var server = client..GetServer();
-            //var database = server.GetDatabase(databaseName);
             var database = client.GetDatabase(databaseName);
             _collection = database.GetCollection<TAggregate>(collectionName);
         }
  
-        public TAggregate GetById(TId id)
+        public Task<TAggregate> GetById(Guid id)
         {
-            //todo serialize or write wrapper
-//            return _collection.FindOneById(id);
-            throw new NotImplementedException();
+            return _collection.Find(x => x.Id == id).FirstOrDefaultAsync();
         }
 
         public async Task<IEnumerable<TAggregate>> GetAll()
@@ -34,22 +30,23 @@ namespace DDD.Light.Repo.MongoDB
             return await _collection.Find(new BsonDocument()).ToListAsync();
         }
 
-        public IQueryable<TAggregate> Get()
+        public Task<IQueryable<TAggregate>> Get()
         {
-            return _collection.AsQueryable();
+            return Task.FromResult(_collection.AsQueryable<TAggregate>() as IQueryable<TAggregate>);
         }
 
-        public void Save(TAggregate item)
+        public async Task Save(TAggregate item)
         {
-            _collection.Save(item);
+            var filter = Builders<TAggregate>.Filter.Eq(s => s.Id, item.Id);
+            var result = await _collection.ReplaceOneAsync(filter, item);
         }
 
         public void SaveAll(IEnumerable<TAggregate> items)
         {
-            items.ToList().ForEach(Save);
+            Parallel.ForEach(items, async x => await Save(x));
         }
 
-        public void Delete(TId id)
+        public void Delete(Guid id)
         {
             //todo serialize or wrapper
 //            _collection.Remove(Query.EQ("_id", id));
@@ -63,12 +60,13 @@ namespace DDD.Light.Repo.MongoDB
 
         public void DeleteAll()
         {
-            _collection.RemoveAll();
+            //_collection.RemoveAll();
         }
 
         public long Count()
         {
-            return _collection.Count();
+            //return _collection.Count();
+            return 0;
         }
     }
 }

@@ -6,8 +6,8 @@
 		<title>$title$</title>
 		<authors>$author$</authors>
 		<owners>$author$</owners>
-		<licenseUrl>https://raw.github.com/aksharp/DDD.Light/master/MIT-LICENSE.txt</licenseUrl>
-		<projectUrl>https://github.com/aksharp/DDD.Light</projectUrl>
+		<licenseUrl>https://raw.github.com/wallaceiam/DDD.Light/master/MIT-LICENSE.txt</licenseUrl>
+		<projectUrl>https://github.com/wallaceiam/DDD.Light</projectUrl>
 		<requireLicenseAcceptance>true</requireLicenseAcceptance>
 		<description>$description$</description>
 		<copyright>$copyright$</copyright>

@@ -1,7 +1,7 @@
 /*
- Copyright 2012 Alexander Khotyanov
- https://github.com/aksharp
- @aleq
+ Copyright 2016 Chris Wallace
+ https://github.com/wallaceiam
+ @wallaceiam
 
  Permission is hereby granted, free of charge, to any person obtaining
  a copy of this software and associated documentation files (the

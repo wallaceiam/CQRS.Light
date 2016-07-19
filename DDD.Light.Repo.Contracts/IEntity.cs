@@ -1,7 +1,9 @@
-﻿namespace DDD.Light.Repo.Contracts
+﻿using System;
+
+namespace DDD.Light.Repo.Contracts
 {
-    public interface IEntity<TId>
+    public interface IEntity
     {
-        TId Id { get; set; }
+        Guid Id { get; set; }
     }
 }

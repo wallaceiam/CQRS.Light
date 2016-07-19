@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using DDD.Light.CQRS.Contracts;
 using DDD.Light.EventStore.Contracts;
+using System.Threading.Tasks;
 
 namespace DDD.Light.CQRS.InProcess
 {
@@ -42,15 +43,15 @@ namespace DDD.Light.CQRS.InProcess
             EventHandlersDatabase<T>.Instance.Add(handleMethod);
         }
 
-        public void Publish<TId, TEvent>(Type aggregateType, TId aggregateId, TEvent @event)
+        public async Task Publish<TEvent>(Type aggregateType, Guid aggregateId, TEvent @event)
         {
-            StoreEvent(aggregateType, aggregateId, @event);
+            await StoreEvent(aggregateType, aggregateId, @event);
             HandleEvent(@event);
         }
 
-        public void Publish<TAggregate, TId, T>(TId aggregateId, T @event)
+        public async Task Publish<TAggregate, T>(Guid aggregateId, T @event)
         {
-            StoreEvent(typeof(TAggregate), aggregateId, @event);
+            await StoreEvent(typeof(TAggregate), aggregateId, @event);
             HandleEvent(@event);
         }
 
@@ -69,25 +70,25 @@ namespace DDD.Light.CQRS.InProcess
                 if (!Equals(@event, default(T)))
                     new Transaction<T>(@event, EventHandlersDatabase<T>.Instance.Get().ToList()).Commit();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw new ApplicationException("Transaction<T>(@event, EventHandlersDatabase<T>.Instance.Get().ToList()).Commit() failed");
             }
         }
 
-        private void StoreEvent<TId, TEvent>(Type aggregateType, TId aggregateId, TEvent @event)
+        private async Task StoreEvent<TEvent>(Type aggregateType, Guid aggregateId, TEvent @event)
         {
             if (_eventStore == null) throw new ApplicationException("Event Store is not configured. Use 'EventBus.Instance.Configure(eventStore, eventSerializationStrategy);' to configure it.");
             try
             {
                 if (_checkLatestEventTimestampPriorToSavingToEventStore)
                 {
-                    var latestCreatedOnInEventStore = _eventStore.LatestEventTimestamp(aggregateId);
+                    var latestCreatedOnInEventStore = await _eventStore.LatestEventTimestamp(aggregateId);
                     if (DateTime.Compare(DateTime.UtcNow, latestCreatedOnInEventStore) < 0)
                         //earlier than in event store
                     {
                         var serializedAggregateId = _eventSerializationStrategy.SerializeEvent(aggregateId);
-                        Publish(GetType(), aggregateId, new AggregateCacheCleared(serializedAggregateId, typeof(TId), aggregateType));
+                        await Publish(GetType(), aggregateId, new AggregateCacheCleared(serializedAggregateId, typeof(Guid), aggregateType));
                     }
                 }
                 _eventStore.Save(new AggregateEvent
@@ -98,7 +99,7 @@ namespace DDD.Light.CQRS.InProcess
                         CreatedOn = DateTime.UtcNow,
                         SerializedEvent = _eventSerializationStrategy.SerializeEvent(@event),
                         SerializedAggregateId = _eventSerializationStrategy.SerializeEvent(aggregateId),
-                        AggregateIdType = typeof(TId).AssemblyQualifiedName
+                        AggregateIdType = typeof(Guid).AssemblyQualifiedName
                     });
             }
             catch (Exception ex)
@@ -112,14 +113,14 @@ namespace DDD.Light.CQRS.InProcess
             return _eventStore;
         }
 
-        public async void RestoreReadModel()
+        public async Task RestoreReadModel()
         {
             (await _eventStore.GetAll()).ToList().ForEach(HandleRestoreReadModelEvent);
         }
 
-        public void RestoreReadModel(DateTime until)
+        public async Task RestoreReadModel(DateTime until)
         {
-            _eventStore.GetAll(until).ToList().ForEach(HandleRestoreReadModelEvent);
+            (await _eventStore.GetAll(until)).ToList().ForEach(HandleRestoreReadModelEvent);
         }
 
         private void HandleRestoreReadModelEvent(AggregateEvent aggregateEvent)

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DDD.Light.Repo.InMemory
 {
-    public class InMemoryRepository<TId, TAggregate> : IRepository<TId, TAggregate> where TAggregate : IEntity<TId>
+    public class InMemoryRepository<TAggregate> : IRepository<TAggregate> where TAggregate : IEntity
     {
         private static List<TAggregate> _db; 
 
@@ -15,32 +15,33 @@ namespace DDD.Light.Repo.InMemory
             _db = new List<TAggregate>(); 
         }
 
-        public TAggregate GetById(TId id)
+        public Task<TAggregate> GetById(Guid id)
         {
-            return _db.FirstOrDefault(i => i.Id.Equals(id));
+            return Task.FromResult<TAggregate>(_db.FirstOrDefault(i => i.Id.Equals(id)));
         }
 
-        public async Task<IEnumerable<TAggregate>> GetAll()
+        public Task<IEnumerable<TAggregate>> GetAll()
         {
-            return await Task.FromResult<IEnumerable<TAggregate>>(_db);
+            return Task.FromResult<IEnumerable<TAggregate>>(_db);
         }
 
-        public IQueryable<TAggregate> Get()
+        public Task<IQueryable<TAggregate>> Get()
         {
-            return _db.AsQueryable() ;
+            return Task.FromResult<IQueryable<TAggregate>>(_db.AsQueryable() );
         }
 
-        public void Save(TAggregate item)
+        public Task Save(TAggregate item)
         {
-            _db.Add(item);
+            return Task.Run(() => _db.Add(item));
         }
 
         public void SaveAll(IEnumerable<TAggregate> items)
         {
-            items.ToList().ForEach(Save);
+            Parallel.ForEach(items, async x => await Save(x));
+            //items.ToList().ForEach(Save);
         }
 
-        public void Delete(TId id)
+        public void Delete(Guid id)
         {
             var item = _db.FirstOrDefault(i => i.Id.Equals(id));
             if (!Equals(item, default(TAggregate))) 
