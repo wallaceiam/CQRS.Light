@@ -1,11 +1,12 @@
 ﻿using DDD.Light.Realtor.Domain.Event.Offer;
-using DDD.Light.CQRS.InProcess;
+using DDD.Light.CQRS;
+using System.Threading.Tasks;
 
 namespace DDD.Light.Realtor.Application.EventHandler.Offer
 {
     public class OfferMadeHandler : EventHandler<OfferMade>
     {
-        public override void Handle(OfferMade @event)
+        public override Task HandleAsync(OfferMade @event)
         {
             throw new System.NotImplementedException();
         }

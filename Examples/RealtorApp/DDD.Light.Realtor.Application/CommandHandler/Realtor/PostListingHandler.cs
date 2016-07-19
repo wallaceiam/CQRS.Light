@@ -1,8 +1,9 @@
 ﻿using System;
-using DDD.Light.EventStore.Contracts;
+using DDD.Light.Contracts.EventStore;
 using DDD.Light.Realtor.API.Command.Realtor;
 using DDD.Light.Realtor.Domain.Model.Listing;
-using DDD.Light.CQRS.InProcess;
+using DDD.Light.CQRS;
+using System.Threading.Tasks;
 
 namespace DDD.Light.Realtor.Application.CommandHandler.Realtor
 {
@@ -15,7 +16,7 @@ namespace DDD.Light.Realtor.Application.CommandHandler.Realtor
             _eventStore = eventStore;
         }
 
-        public override void Handle(PostListing command)
+        public override async Task HandleAsync(PostListing command)
         {
             var listing = new Listing(
                 command.ListingId,
@@ -24,7 +25,7 @@ namespace DDD.Light.Realtor.Application.CommandHandler.Realtor
                 command.Price
             );
 
-            var realtor = _eventStore.GetById<Domain.Model.Realtor.Realtor>(Guid.Parse("10000000-0000-0000-0000-000000000000"));
+            var realtor = await _eventStore.GetByIdAsync<Domain.Model.Realtor.Realtor>(Guid.Parse("10000000-0000-0000-0000-000000000000"));
             realtor.PostListing(listing.Id);
         }
     }

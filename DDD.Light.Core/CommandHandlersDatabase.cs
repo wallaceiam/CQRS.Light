@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DDD.Light.Contracts.CQRS;
+using System.Threading.Tasks;
 
 namespace DDD.Light.CQRS
 {
@@ -8,7 +9,8 @@ namespace DDD.Light.CQRS
     {
         private static volatile ICommandHandlersDatabase<T> _instance;
         private static object token = new Object();
-        private readonly List<Action<T>> _registeredHandlerActions;
+        //private readonly List<Action<T>> _registeredHandlerActions;
+        private readonly List<Task<T>> _registeredHandlerActions;
 
         public static ICommandHandlersDatabase<T> Instance
         {
@@ -28,12 +30,13 @@ namespace DDD.Light.CQRS
 
         private CommandHandlersDatabase()
         {
-            _registeredHandlerActions = new List<Action<T>>();
+            _registeredHandlerActions = //new List<Action<T>>();
+                new List<Task<T>>();
         }
 
         public void Add(ICommandHandler<T> commandHandler)
         {
-            _registeredHandlerActions.Add(commandHandler.Handle);
+            _registeredHandlerActions.Add(commandHandler.HandleAsync);
         }
 
         public void Add(Action<T> commandHandlerAction)

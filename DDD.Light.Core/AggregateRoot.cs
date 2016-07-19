@@ -6,7 +6,7 @@ using DDD.Light.Core;
 
 namespace DDD.Light.CQRS
 {
-    public abstract class AggregateRoot<TId> : Entity, IAggregateRoot
+    public abstract class AggregateRoot : Entity, IAggregateRoot
     {
         protected AggregateRoot()
         {

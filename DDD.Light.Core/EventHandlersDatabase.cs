@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DDD.Light.Contracts.CQRS;
+using System.Threading.Tasks;
 
 namespace DDD.Light.CQRS
 {
@@ -8,7 +9,7 @@ namespace DDD.Light.CQRS
     {
         private static volatile IEventHandlersDatabase<T> _instance;
         private static object token = new Object();
-        private readonly List<Action<T>> _registeredHandlerActions;
+        private readonly List<Task<T>> _registeredHandlerActions;
 
         public static IEventHandlersDatabase<T> Instance
         {
@@ -28,7 +29,7 @@ namespace DDD.Light.CQRS
 
         private EventHandlersDatabase()
         {
-            _registeredHandlerActions = new List<Action<T>>();
+            _registeredHandlerActions = new List<Task<T>>();
             _instanceID = Guid.NewGuid();
         }
 
@@ -40,15 +41,15 @@ namespace DDD.Light.CQRS
 
         public void Add(IEventHandler<T> eventHandler)
         {
-            _registeredHandlerActions.Add(eventHandler.Handle);
+            _registeredHandlerActions.Add(eventHandler.HandleAsync);
         }
 
         public void Add(Action<T> eventHandlerAction)
         {
-            _registeredHandlerActions.Add(eventHandlerAction);
+            _registeredHandlerActions.Add(new Task<T>(eventHandlerAction));
         }
 
-        public IEnumerable<Action<T>> Get()
+        public IEnumerable<Task<T>> Get()
         {
             return _registeredHandlerActions;
         }

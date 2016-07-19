@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -13,11 +13,17 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DDD.Light.Realtor.REST.API</RootNamespace>
     <AssemblyName>DDD.Light.Realtor.REST.API</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>false</UseIISExpress>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -27,6 +33,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -35,6 +42,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AttributeRouting">
@@ -64,6 +72,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http">
@@ -78,11 +87,11 @@
       <HintPath>..\..\..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Http">
       <HintPath>..\..\..\packages\Microsoft.AspNet.WebApi.Core.4.0.20710.0\lib\net40\System.Web.Http.dll</HintPath>
       <Private>True</Private>
@@ -91,7 +100,6 @@
       <HintPath>..\..\..\packages\Microsoft.AspNet.WebApi.WebHost.4.0.20710.0\lib\net40\System.Web.Http.WebHost.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Routing" />
@@ -125,6 +133,7 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="WebActivator">
       <HintPath>..\..\..\packages\WebActivator.1.5.3\lib\net40\WebActivator.dll</HintPath>
     </Reference>
@@ -188,37 +197,13 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\DDD.Light.AggregateBus.Contracts\DDD.Light.AggregateBus.Contracts.csproj">
-      <Project>{F8AB8E9D-8208-4CDC-B6F6-DD9E4CF72B8E}</Project>
-      <Name>DDD.Light.AggregateBus.Contracts</Name>
+    <ProjectReference Include="..\..\..\DDD.Light.Contracts\DDD.Light.Contracts.csproj">
+      <Project>{a84ee5c7-916c-41d3-8bda-ab9b252c09b6}</Project>
+      <Name>DDD.Light.Contracts</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\DDD.Light.AggregateBus.InProcess\DDD.Light.AggregateBus.InProcess.csproj">
-      <Project>{5F931A52-5208-400C-AAB9-AA50E36F09EC}</Project>
-      <Name>DDD.Light.AggregateBus.InProcess</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\DDD.Light.AggregateCache.Contracts\DDD.Light.AggregateCache.Contracts.csproj">
-      <Project>{84090A02-667B-456F-9FAF-13B6A9DF4765}</Project>
-      <Name>DDD.Light.AggregateCache.Contracts</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\DDD.Light.AggregateCache\DDD.Light.AggregateCache.csproj">
-      <Project>{FD19D68A-20F0-4A55-AAD4-504D44A3592D}</Project>
-      <Name>DDD.Light.AggregateCache</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\DDD.Light.CQRS.Contracts\DDD.Light.CQRS.Contracts.csproj">
-      <Project>{72223ABD-AA42-44E1-8E95-FD26036C13BD}</Project>
-      <Name>DDD.Light.CQRS.Contracts</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\DDD.Light.CQRS.InProcess\DDD.Light.CQRS.InProcess.csproj">
-      <Project>{80F4D478-672E-4687-9997-0EDF466D55A8}</Project>
-      <Name>DDD.Light.CQRS.InProcess</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\DDD.Light.EventStore.Contracts\DDD.Light.EventStore.Contracts.csproj">
-      <Project>{3DF5D3BE-8199-4E2D-B80E-8D201A4476F3}</Project>
-      <Name>DDD.Light.EventStore.Contracts</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\DDD.Light.EventStore\DDD.Light.EventStore.csproj">
-      <Project>{5BC75F9C-E63F-498F-8FA7-7A7A19F2DD90}</Project>
-      <Name>DDD.Light.EventStore</Name>
+    <ProjectReference Include="..\..\..\DDD.Light.Core\DDD.Light.Core.csproj">
+      <Project>{82915045-7657-4840-bf45-4c72d9cc435c}</Project>
+      <Name>DDD.Light.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\DDD.Light.Realtor.API\DDD.Light.Realtor.API.csproj">
       <Project>{90C52FD6-3998-4A1C-8682-59002C7B6AA4}</Project>
@@ -227,10 +212,6 @@
     <ProjectReference Include="..\DDD.Light.Realtor.Application\DDD.Light.Realtor.Application.csproj">
       <Project>{AFA2227D-796B-41CE-B34F-2C917C8F959C}</Project>
       <Name>DDD.Light.Realtor.Application</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\DDD.Light.Repo.Contracts\DDD.Light.Repo.Contracts.csproj">
-      <Project>{E275A12B-521A-4D92-AD1E-3DA98B106009}</Project>
-      <Name>DDD.Light.Repo.Contracts</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\DDD.Light.Repo.MongoDB\DDD.Light.Repo.MongoDB.csproj">
       <Project>{AD1F872F-E8C6-41C7-A7F0-21CCB3AE1EC1}</Project>

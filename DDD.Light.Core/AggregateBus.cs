@@ -29,6 +29,11 @@ namespace DDD.Light.Core
             }
         }
 
+        public List<IAggregateCache> RegisteredAggregateCaches
+        {
+            get { return _registeredAggregateCaches; }
+        }
+
         public void Configure(IEventBus eventBus, IAggregateCache aggregateCache)
         {
             _eventBus = eventBus;
@@ -45,8 +50,8 @@ namespace DDD.Light.Core
         public void Publish<TAggregate, TEvent>(Guid aggregateId, TEvent @event) where TAggregate : IAggregateRoot
         {
             if (_eventBus == null) throw new ApplicationException("AggregateBus -> Publish failed. EventBus is not configured");
-            _eventBus.Publish<TAggregate, TEvent>(aggregateId, @event);
-            _registeredAggregateCaches.ForEach(aggregateCache => aggregateCache.Handle<TAggregate, TEvent>(aggregateId, @event));
+            _eventBus.PublishAsync<TAggregate, TEvent>(aggregateId, @event);
+            _registeredAggregateCaches.ForEach(aggregateCache => aggregateCache.HandleAsync<TAggregate, TEvent>(aggregateId, @event));
         }
 
     }

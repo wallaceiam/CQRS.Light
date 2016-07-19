@@ -17,12 +17,12 @@ namespace DDD.Light.EventStore.MongoDB.Example
             EventBus.Instance.Subscribe((PersonCreated personCreated) =>
                 {                    
                     var personDTO = new PersonDTO {Id = personCreated.Id};
-                    personReadModel.Save(personDTO);
+                    personReadModel.SaveAsync(personDTO);
                 });
             
             EventBus.Instance.Subscribe((PersonNamed personNamed) =>
                 {                    
-                    var personDTO = personReadModel.GetById(personNamed.PersonId);
+                    var personDTO = personReadModel.GetByIdAsync(personNamed.PersonId);
                     personDTO.Name = personNamed.Name;
                     personDTO.WasRenamed = false;
                     personReadModel.Save(personDTO);
@@ -30,7 +30,7 @@ namespace DDD.Light.EventStore.MongoDB.Example
 
             EventBus.Instance.Subscribe((PersonRenamed personRenamed) =>
                 {                    
-                    var personDTO = personReadModel.GetById(personRenamed.PersonId);
+                    var personDTO = personReadModel.GetByIdAsync(personRenamed.PersonId);
                     personDTO.Name = personRenamed.Name;                    
                     personDTO.WasRenamed = true;                    
                     personReadModel.Save(personDTO);

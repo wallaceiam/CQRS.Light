@@ -1,9 +1,10 @@
-﻿using DDD.Light.EventStore.Contracts;
+﻿using DDD.Light.Contracts.EventStore;
 using DDD.Light.Realtor.API.Query.Model;
 using DDD.Light.Realtor.Domain.Event.Listing;
 using DDD.Light.Realtor.Domain.Event.Realtor;
-using DDD.Light.Repo.Contracts;
-using DDD.Light.CQRS.InProcess;
+using DDD.Light.Contracts.Repo;
+using DDD.Light.CQRS;
+using System.Threading.Tasks;
 
 namespace DDD.Light.Realtor.Application.EventHandler.Listing
 {
@@ -16,7 +17,7 @@ namespace DDD.Light.Realtor.Application.EventHandler.Listing
             _activeListings = activeListings;
         }
 
-        public override void Handle(ListingPosted @event)
+        public override async Task HandleAsync(ListingPosted @event)
         {
             var activeListing = new API.Query.Model.Listing
                 {
@@ -30,7 +31,7 @@ namespace DDD.Light.Realtor.Application.EventHandler.Listing
                     Zip = @event.Zip,
                     Price = @event.Price
                 };
-            _activeListings.Save(activeListing);
+            await _activeListings.SaveAsync(activeListing);
         }
     }
 }

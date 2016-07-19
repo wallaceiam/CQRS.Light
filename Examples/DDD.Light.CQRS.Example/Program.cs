@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Reflection;
-using DDD.Light.CQRS.InProcess;
-using DDD.Light.EventStore;
-using DDD.Light.EventStore.Contracts;
 using DDD.Light.Repo.MongoDB;
 using log4net;
 using log4net.Config;

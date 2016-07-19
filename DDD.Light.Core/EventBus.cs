@@ -43,13 +43,13 @@ namespace DDD.Light.CQRS
             EventHandlersDatabase<T>.Instance.Add(handleMethod);
         }
 
-        public async Task Publish<TEvent>(Type aggregateType, Guid aggregateId, TEvent @event)
+        public async Task PublishAsync<TEvent>(Type aggregateType, Guid aggregateId, TEvent @event)
         {
             await StoreEvent(aggregateType, aggregateId, @event);
             HandleEvent(@event);
         }
 
-        public async Task Publish<TAggregate, T>(Guid aggregateId, T @event)
+        public async Task PublishAsync<TAggregate, T>(Guid aggregateId, T @event)
         {
             await StoreEvent(typeof(TAggregate), aggregateId, @event);
             HandleEvent(@event);
@@ -83,12 +83,12 @@ namespace DDD.Light.CQRS
             {
                 if (_checkLatestEventTimestampPriorToSavingToEventStore)
                 {
-                    var latestCreatedOnInEventStore = await _eventStore.LatestEventTimestamp(aggregateId);
+                    var latestCreatedOnInEventStore = await _eventStore.LatestEventTimestampAsync(aggregateId);
                     if (DateTime.Compare(DateTime.UtcNow, latestCreatedOnInEventStore) < 0)
                         //earlier than in event store
                     {
                         var serializedAggregateId = _eventSerializationStrategy.SerializeEvent(aggregateId);
-                        await Publish(GetType(), aggregateId, new AggregateCacheCleared(serializedAggregateId, typeof(Guid), aggregateType));
+                        await PublishAsync(GetType(), aggregateId, new AggregateCacheCleared(serializedAggregateId, typeof(Guid), aggregateType));
                     }
                 }
                 _eventStore.Save(new AggregateEvent
@@ -113,14 +113,14 @@ namespace DDD.Light.CQRS
             return _eventStore;
         }
 
-        public async Task RestoreReadModel()
+        public async Task RestoreReadModelAync()
         {
-            (await _eventStore.GetAll()).ToList().ForEach(HandleRestoreReadModelEvent);
+            (await _eventStore.GetAllAsync()).ToList().ForEach(HandleRestoreReadModelEvent);
         }
 
-        public async Task RestoreReadModel(DateTime until)
+        public async Task RestoreReadModelAync(DateTime until)
         {
-            (await _eventStore.GetAll(until)).ToList().ForEach(HandleRestoreReadModelEvent);
+            (await _eventStore.GetAllAsync(until)).ToList().ForEach(HandleRestoreReadModelEvent);
         }
 
         private void HandleRestoreReadModelEvent(AggregateEvent aggregateEvent)

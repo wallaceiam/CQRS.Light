@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using DDD.Light.Realtor.API.Query.Contract;
 using DDD.Light.Realtor.API.Query.Model;
-using DDD.Light.Repo.Contracts;
+using DDD.Light.Contracts.Repo;
+using System.Threading.Tasks;
 
 namespace DDD.Light.Realtor.API.Query
 {
@@ -16,19 +17,19 @@ namespace DDD.Light.Realtor.API.Query
             _listingsRepo = listingsRepo;
         }
 
-        public IEnumerable<Listing> All()
+        public async Task<IEnumerable<Listing>> All()
         {
-            return _listingsRepo.GetAll();
+            return await _listingsRepo.GetAllAsync();
         }
 
-        public Listing ById(Guid id)
+        public async Task<Listing> ById(Guid id)
         {
-            return _listingsRepo.GetById(id);
+            return await _listingsRepo.GetByIdAsync(id);
         }
 
-        public IEnumerable<Listing> UnderMillionDollars()
+        public async Task<IEnumerable<Listing>> UnderMillionDollars()
         {
-            return _listingsRepo.Get().Where(l => l.Price < 1000000);
+            return (await _listingsRepo.GetAsync()).Where(l => l.Price < 1000000);
         }
 
     }

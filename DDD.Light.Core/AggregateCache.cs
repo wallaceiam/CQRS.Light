@@ -44,23 +44,23 @@ namespace DDD.Light.Core
             return _getAggregateCacheRepositoryInstance(typeof(IRepository<TAggregate>)) as IRepository<TAggregate>;
         }
 
-        public async Task<TAggregate> GetById<TAggregate>(Guid id) where TAggregate : IAggregateRoot
+        public async Task<TAggregate> GetByIdAsync<TAggregate>(Guid id) where TAggregate : IAggregateRoot
         {
-            var cachedAggregate = await GetRepository<TAggregate>().GetById(id);
+            var cachedAggregate = await GetRepository<TAggregate>().GetByIdAsync(id);
             if (Equals(cachedAggregate, default(TAggregate)))
             {
-                var aggregate = await _eventStore.GetById<TAggregate>(id);
-                await GetRepository<TAggregate>().Save(aggregate);
+                var aggregate = await _eventStore.GetByIdAsync<TAggregate>(id);
+                await GetRepository<TAggregate>().SaveAsync(aggregate);
                 return aggregate;
             }
             return cachedAggregate;
         }
 
-        public async Task Handle<TAggregate, TEvent>(Guid aggregateId, TEvent @event) where TAggregate : IAggregateRoot
+        public async Task HandleAsync<TAggregate, TEvent>(Guid aggregateId, TEvent @event) where TAggregate : IAggregateRoot
         {
-            var aggregate = await GetRepository<TAggregate>().GetById(aggregateId);
+            var aggregate = await GetRepository<TAggregate>().GetByIdAsync(aggregateId);
             if (Equals(aggregate, default(TAggregate)))
-                aggregate = await _eventStore.GetById<TAggregate>(aggregateId);
+                aggregate = await _eventStore.GetByIdAsync<TAggregate>(aggregateId);
             if (!Equals(aggregate, default(TAggregate)))
                 ApplyEvent<TAggregate, TEvent>(@event, aggregate);
         }

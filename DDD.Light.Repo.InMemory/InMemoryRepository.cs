@@ -15,52 +15,56 @@ namespace DDD.Light.Repo.InMemory
             _db = new List<TAggregate>(); 
         }
 
-        public Task<TAggregate> GetById(Guid id)
+        public Task<TAggregate> GetByIdAsync(Guid id)
         {
             return Task.FromResult<TAggregate>(_db.FirstOrDefault(i => i.Id.Equals(id)));
         }
 
-        public Task<IEnumerable<TAggregate>> GetAll()
+        public Task<IEnumerable<TAggregate>> GetAllAsync()
         {
             return Task.FromResult<IEnumerable<TAggregate>>(_db);
         }
 
-        public Task<IQueryable<TAggregate>> Get()
+        public Task<IQueryable<TAggregate>> GetAsync()
         {
             return Task.FromResult<IQueryable<TAggregate>>(_db.AsQueryable() );
         }
 
-        public Task Save(TAggregate item)
+        public Task SaveAsync(TAggregate item)
         {
-            return Task.Run(() => _db.Add(item));
+            _db.Add(item);
+            return Task.FromResult<object>(null);
         }
 
-        public void SaveAll(IEnumerable<TAggregate> items)
+        public Task SaveAllAsync(IEnumerable<TAggregate> items)
         {
-            Parallel.ForEach(items, async x => await Save(x));
-            //items.ToList().ForEach(Save);
+            Parallel.ForEach(items, async x => await SaveAsync(x));
+            return Task.FromResult<object>(null);
         }
 
-        public void Delete(Guid id)
+        public Task DeleteAsync(Guid id)
         {
             var item = _db.FirstOrDefault(i => i.Id.Equals(id));
             if (!Equals(item, default(TAggregate))) 
-                Delete(item);
+                DeleteAsync(item);
+            return Task.FromResult<object>(null);
         }
 
-        public void Delete(TAggregate item)
+        public Task DeleteAsync(TAggregate item)
         {
             _db.Remove(item);
+            return Task.FromResult<object>(null);
         }
 
-        public void DeleteAll()
+        public Task DeleteAllAsync()
         {
             _db.Clear();
+            return Task.FromResult<object>(null);
         }
 
-        public long Count()
+        public Task<long> CountAsync()
         {
-            return _db.Count;
+            return Task.FromResult((long)_db.Count);
         }
     }
 }

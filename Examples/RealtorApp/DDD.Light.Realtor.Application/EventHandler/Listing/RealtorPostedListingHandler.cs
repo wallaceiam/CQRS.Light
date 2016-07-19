@@ -1,6 +1,7 @@
-﻿using DDD.Light.EventStore.Contracts;
+﻿using DDD.Light.Contracts.EventStore;
 using DDD.Light.Realtor.Domain.Event.Realtor;
-using DDD.Light.CQRS.InProcess;
+using DDD.Light.CQRS;
+using System.Threading.Tasks;
 
 namespace DDD.Light.Realtor.Application.EventHandler.Listing
 {
@@ -13,9 +14,9 @@ namespace DDD.Light.Realtor.Application.EventHandler.Listing
             _eventStore = eventStore;
         }
 
-        public override void Handle(RealtorPostedListing @event)
+        public override async Task HandleAsync(RealtorPostedListing @event)
         {
-            var listing = _eventStore.GetById<Domain.Model.Listing.Listing>(@event.ListingId);
+            var listing = await _eventStore.GetByIdAsync<Domain.Model.Listing.Listing>(@event.ListingId);
             listing.Post();
         }
     }

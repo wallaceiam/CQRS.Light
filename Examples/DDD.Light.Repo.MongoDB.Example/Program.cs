@@ -35,16 +35,16 @@ namespace DDD.Light.Repo.MongoDB.Example
             };
 
             // save to repository
-            personRepository.Save(newPerson);
+            personRepository.SaveAsync(newPerson);
 
             Console.WriteLine("person saved");
 
             // get by id
-            var personFoundById = personRepository.GetById(id);
+            var personFoundById = personRepository.GetByIdAsync(id);
             Console.WriteLine("get by id " + id + " result: " + personFoundById.FirstName + " " + personFoundById.LastName);
 
             // query repository
-            var peopleFoundByQuery = personRepository.Get().Where(p => p.FirstName == newPerson.FirstName);
+            var peopleFoundByQuery = personRepository.GetAsync().Where(p => p.FirstName == newPerson.FirstName);
             Console.WriteLine("get by matching FirstName == " + newPerson.FirstName);
             peopleFoundByQuery.ToList().ForEach(p => Console.WriteLine(" match: " + p.FirstName + " " + p.LastName));
             

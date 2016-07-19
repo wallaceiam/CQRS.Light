@@ -7,15 +7,15 @@ namespace DDD.Light.Contracts.EventStore
 {
     public interface IEventStore
     {
-        Task<TAggregate> GetById<TAggregate>(Guid id);
-        Task<TAggregate> GetById<TAggregate>(Guid id, DateTime until);
-        Task<object> GetById(Guid id);
+        Task<TAggregate> GetByIdAsync<TAggregate>(Guid id);
+        Task<TAggregate> GetByIdAsync<TAggregate>(Guid id, DateTime until);
+        Task<object> GetByIdAsync(Guid id);
         void Save(AggregateEvent aggregateEvent);
         void Configure(IRepository<AggregateEvent> repo, IEventSerializationStrategy serializationStrategy);
-        Task<IEnumerable<AggregateEvent>> GetAll();
-        Task<IEnumerable<AggregateEvent>> GetAll(DateTime until);
-        long Count();
-        Task<DateTime> LatestEventTimestamp(Guid aggregateId);
-        Task<IEnumerable<TEvent>> GetEvents<TEvent>();
+        Task<IEnumerable<AggregateEvent>> GetAllAsync();
+        Task<IEnumerable<AggregateEvent>> GetAllAsync(DateTime until);
+        Task<long> CountAsync();
+        Task<DateTime> LatestEventTimestampAsync(Guid aggregateId);
+        Task<IEnumerable<TEvent>> GetEventsAsync<TEvent>();
     }
 }

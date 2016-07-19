@@ -1,11 +1,12 @@
 ﻿using DDD.Light.Realtor.Domain.Event.Buyer;
-using DDD.Light.CQRS.InProcess;
+using DDD.Light.CQRS;
+using System.Threading.Tasks;
 
 namespace DDD.Light.Realtor.Application.EventHandler.Buyer
 {
     public class TookOwnershipOfListingHandler : EventHandler<TookOwnershipOfListing>
     {
-        public override void Handle(TookOwnershipOfListing @event)
+        public override Task HandleAsync(TookOwnershipOfListing @event)
         {
             throw new System.NotImplementedException();
         }

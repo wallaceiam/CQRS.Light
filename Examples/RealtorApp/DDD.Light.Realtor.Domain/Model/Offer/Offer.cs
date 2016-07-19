@@ -1,5 +1,5 @@
 ﻿using System;
-using DDD.Light.CQRS.InProcess;
+using DDD.Light.CQRS;
 using DDD.Light.Realtor.Domain.Event.Offer;
 
 namespace DDD.Light.Realtor.Domain.Model.Offer
@@ -18,14 +18,14 @@ namespace DDD.Light.Realtor.Domain.Model.Offer
         {
             if (Id == null) throw new Exception("Offer does not have Id");
             OfferReply = new OfferAcceptance{ RepliedOn = DateTime.UtcNow };
-            EventBus.Instance.Publish(GetType(), Id, new Accepted { Offer = this });
+            EventBus.Instance.PublishAsync(GetType(), Id, new Accepted { Offer = this });
         }
         
         public void Reject()
         {
             if (Id == null) throw new Exception("Offer does not have Id");
             OfferReply = new OfferDenial{ RepliedOn = DateTime.UtcNow };
-            EventBus.Instance.Publish(GetType(), Id, new Rejected { Offer = this });
+            EventBus.Instance.PublishAsync(GetType(), Id, new Rejected { Offer = this });
         }
     }
 }

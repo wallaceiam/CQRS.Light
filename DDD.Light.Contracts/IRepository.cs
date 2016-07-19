@@ -7,14 +7,14 @@ namespace DDD.Light.Contracts.Repo
 {
     public interface IRepository<TAggregate>
     {
-        Task<TAggregate> GetById(Guid id);
-        Task<IEnumerable<TAggregate>> GetAll();
-        Task<IQueryable<TAggregate>> Get();
-        Task Save(TAggregate item);
-        void SaveAll(IEnumerable<TAggregate> items);
-        void Delete(Guid id);
-        void Delete(TAggregate item);
-        void DeleteAll();
-        long Count();
+        Task<TAggregate> GetByIdAsync(Guid id);
+        Task<IEnumerable<TAggregate>> GetAllAsync();
+        Task<IQueryable<TAggregate>> GetAsync();
+        Task SaveAsync(TAggregate item);
+        Task SaveAllAsync(IEnumerable<TAggregate> items);
+        Task DeleteAsync(Guid id);
+        Task DeleteAsync(TAggregate item);
+        Task DeleteAllAsync();
+        Task<long> CountAsync();
     }
 }

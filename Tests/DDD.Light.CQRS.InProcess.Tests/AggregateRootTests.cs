@@ -6,10 +6,11 @@ using DDD.Light.Contracts.EventStore;
 using DDD.Light.Contracts.Repo;
 using DDD.Light.Repo.InMemory;
 using NUnit.Framework;
+using System.Threading.Tasks;
 
 namespace DDD.Light.CQRS.InProcess.Tests
 {
-    public class SomeAggregateRoot : AggregateRoot<Guid>
+    public class SomeAggregateRoot : AggregateRoot
     {
         private string _message;
         private SomeAggregateRoot(){}
@@ -37,9 +38,10 @@ namespace DDD.Light.CQRS.InProcess.Tests
 
     public class SomeAggregateRootCreatedHandler : EventHandler<SomeAggregateRootCreated>
     {
-        public override void Handle(SomeAggregateRootCreated @event)
+        public override Task HandleAsync(SomeAggregateRootCreated @event)
         {
             // no op
+            return Task.FromResult<object>(null);
         }
     }
 
@@ -65,7 +67,7 @@ namespace DDD.Light.CQRS.InProcess.Tests
 //            mongoAggregateEventsRepository.DeleteAll();
 
             var inMemoryAggregateEventsRepository = new InMemoryRepository<AggregateEvent>();
-            inMemoryAggregateEventsRepository.DeleteAll();
+            inMemoryAggregateEventsRepository.DeleteAllAsync();
 
             EventStore.Instance.Configure(inMemoryAggregateEventsRepository, serializationStrategy);
             EventBus.Instance.Configure(EventStore.Instance, serializationStrategy, false);
@@ -99,8 +101,8 @@ namespace DDD.Light.CQRS.InProcess.Tests
             var ar = new SomeAggregateRoot(id, createdMessage);
 
             // Assert
-            Assert.AreEqual(1, EventStore.Instance.Count());
-            var firstEventType = EventStore.Instance.GetAll().Result.First();
+            Assert.AreEqual(1, EventStore.Instance.CountAsync());
+            var firstEventType = EventStore.Instance.GetAllAsync().Result.First();
             Assert.AreEqual(typeof(SomeAggregateRootCreated), Type.GetType(firstEventType.EventType));
             Assert.AreEqual(createdMessage, ((SomeAggregateRootCreated)serializationStrategy.DeserializeEvent(firstEventType.SerializedEvent, typeof(SomeAggregateRootCreated))).Message);
         }

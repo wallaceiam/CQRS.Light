@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 namespace DDD.Light.Repo.MongoDB
 {
     public class MongoRepository<TAggregate> : IRepository<TAggregate>
-        where TAggregate : IEntity 
+        where TAggregate : IEntity
     {
-        private readonly  IMongoCollection<TAggregate> _collection;
+        private readonly IMongoCollection<TAggregate> _collection;
 
         public MongoRepository(string connectionString, string databaseName, string collectionName)
         {
@@ -19,54 +19,63 @@ namespace DDD.Light.Repo.MongoDB
             var database = client.GetDatabase(databaseName);
             _collection = database.GetCollection<TAggregate>(collectionName);
         }
- 
-        public Task<TAggregate> GetById(Guid id)
+
+        public async Task<TAggregate> GetByIdAsync(Guid id)
         {
-            return _collection.Find(x => x.Id == id).FirstOrDefaultAsync();
+            var filter = Builders<TAggregate>.Filter.Eq(s => s.Id, id);
+            using (var cursor = await _collection.FindAsync(filter))
+            {
+                return await cursor.FirstOrDefaultAsync();
+            }
         }
 
-        public async Task<IEnumerable<TAggregate>> GetAll()
+        public async Task<IEnumerable<TAggregate>> GetAllAsync()
         {
-            return await _collection.Find(new BsonDocument()).ToListAsync();
+            using (var cursor = await _collection.FindAsync(new BsonDocument()))
+            {
+                return await cursor.ToListAsync();
+            }
         }
 
-        public Task<IQueryable<TAggregate>> Get()
+        public async Task<IQueryable<TAggregate>> GetAsync()
         {
-            return Task.FromResult(_collection.AsQueryable<TAggregate>() as IQueryable<TAggregate>);
+            using (var cursor = await _collection.FindAsync(new BsonDocument()))
+            {
+                return (await cursor.ToListAsync()).AsQueryable();
+            }
         }
 
-        public async Task Save(TAggregate item)
+        public async Task SaveAsync(TAggregate item)
         {
             var filter = Builders<TAggregate>.Filter.Eq(s => s.Id, item.Id);
             var result = await _collection.ReplaceOneAsync(filter, item);
         }
 
-        public void SaveAll(IEnumerable<TAggregate> items)
+        public Task SaveAllAsync(IEnumerable<TAggregate> items)
         {
-            Parallel.ForEach(items, async x => await Save(x));
+            Parallel.ForEach(items, async x => await SaveAsync(x));
+            return Task.FromResult<object>(null);
         }
 
-        public void Delete(Guid id)
+        public async Task DeleteAsync(Guid id)
         {
-            //todo serialize or wrapper
-//            _collection.Remove(Query.EQ("_id", id));
-            throw new NotImplementedException();
+            var filter = Builders<TAggregate>.Filter.Eq(s => s.Id, id);
+            await _collection.DeleteOneAsync(filter);
         }
 
-        public void Delete(TAggregate item)
+        public async Task DeleteAsync(TAggregate item)
         {
-            Delete(item.Id);
+            await DeleteAsync(item.Id);
         }
 
-        public void DeleteAll()
+        public async Task DeleteAllAsync()
         {
-            //_collection.RemoveAll();
+            await _collection.DeleteManyAsync(new BsonDocument());
         }
 
-        public long Count()
+        public async Task<long> CountAsync()
         {
-            //return _collection.Count();
-            return 0;
+            return await _collection.CountAsync(new BsonDocument());
         }
     }
 }
