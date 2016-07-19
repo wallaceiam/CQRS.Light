@@ -15,6 +15,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{09CD37FF-B011-413B-BC0C-480F215D9518}"
 	ProjectSection(SolutionItems) = preProject
 		MIT-LICENSE.txt = MIT-LICENSE.txt
+		README.md = README.md
 		SharedAssemblyInfo.cs = SharedAssemblyInfo.cs
 	EndProjectSection
 EndProject
@@ -23,8 +24,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDD.Light.CQRS.InProcess.Tests", "Tests\DDD.Light.CQRS.InProcess.Tests\DDD.Light.CQRS.InProcess.Tests.csproj", "{DA541BAE-4358-41EE-BE73-9EF3534E4C78}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDD.Light.Repo.InMemory", "DDD.Light.Repo.InMemory\DDD.Light.Repo.InMemory.csproj", "{0D146339-2755-4610-BD55-5C2FEDFA02A5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDD.Light.CQRS.InProcess.UnitTests", "DDD.Light.CQRS.InProcess.UnitTests\DDD.Light.CQRS.InProcess.UnitTests.csproj", "{DBF6341A-21B0-4054-916F-A285376937DA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDD.Light.Contracts", "DDD.Light.Contracts\DDD.Light.Contracts.csproj", "{A84EE5C7-916C-41D3-8BDA-AB9B252C09B6}"
 EndProject
@@ -70,18 +69,6 @@ Global
 		{0D146339-2755-4610-BD55-5C2FEDFA02A5}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{0D146339-2755-4610-BD55-5C2FEDFA02A5}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{0D146339-2755-4610-BD55-5C2FEDFA02A5}.Release|x86.ActiveCfg = Release|Any CPU
-		{DBF6341A-21B0-4054-916F-A285376937DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DBF6341A-21B0-4054-916F-A285376937DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DBF6341A-21B0-4054-916F-A285376937DA}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{DBF6341A-21B0-4054-916F-A285376937DA}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{DBF6341A-21B0-4054-916F-A285376937DA}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{DBF6341A-21B0-4054-916F-A285376937DA}.Debug|x86.Build.0 = Debug|Any CPU
-		{DBF6341A-21B0-4054-916F-A285376937DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DBF6341A-21B0-4054-916F-A285376937DA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DBF6341A-21B0-4054-916F-A285376937DA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{DBF6341A-21B0-4054-916F-A285376937DA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{DBF6341A-21B0-4054-916F-A285376937DA}.Release|x86.ActiveCfg = Release|Any CPU
-		{DBF6341A-21B0-4054-916F-A285376937DA}.Release|x86.Build.0 = Release|Any CPU
 		{A84EE5C7-916C-41D3-8BDA-AB9B252C09B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A84EE5C7-916C-41D3-8BDA-AB9B252C09B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A84EE5C7-916C-41D3-8BDA-AB9B252C09B6}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -112,6 +99,5 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{DA541BAE-4358-41EE-BE73-9EF3534E4C78} = {6EE7ABD8-EA98-494F-B248-AA64F34CFD4B}
-		{DBF6341A-21B0-4054-916F-A285376937DA} = {6EE7ABD8-EA98-494F-B248-AA64F34CFD4B}
 	EndGlobalSection
 EndGlobal

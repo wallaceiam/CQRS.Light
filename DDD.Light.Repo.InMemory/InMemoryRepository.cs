@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DDD.Light.Repo.Contracts;
+using DDD.Light.Contracts.Repo;
 using System.Threading.Tasks;
 
 namespace DDD.Light.Repo.InMemory

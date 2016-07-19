@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
-using DDD.Light.CQRS.Contracts;
-using DDD.Light.EventStore;
-using DDD.Light.EventStore.Contracts;
-using DDD.Light.Repo.Contracts;
+using DDD.Light.Contracts.CQRS;
+using DDD.Light.Core;
+using DDD.Light.Contracts.EventStore;
+using DDD.Light.Contracts.Repo;
 using DDD.Light.Repo.InMemory;
 using NUnit.Framework;
 
@@ -67,8 +67,8 @@ namespace DDD.Light.CQRS.InProcess.Tests
             var inMemoryAggregateEventsRepository = new InMemoryRepository<AggregateEvent>();
             inMemoryAggregateEventsRepository.DeleteAll();
 
-            EventStore.EventStore.Instance.Configure(inMemoryAggregateEventsRepository, serializationStrategy);
-            EventBus.Instance.Configure(EventStore.EventStore.Instance, serializationStrategy, false);
+            EventStore.Instance.Configure(inMemoryAggregateEventsRepository, serializationStrategy);
+            EventBus.Instance.Configure(EventStore.Instance, serializationStrategy, false);
 
             Func<Type, object> getInstance = type => 
                 {
@@ -88,8 +88,8 @@ namespace DDD.Light.CQRS.InProcess.Tests
                 };
             HandlerSubscribtions.SubscribeAllHandlers(getInstance);
 
-            AggregateCache.AggregateCache.Instance.Configure(EventStore.EventStore.Instance, getInstance);
-            AggregateBus.InProcess.AggregateBus.Instance.Configure(EventBus.Instance, AggregateCache.AggregateCache.Instance);
+            AggregateCache.Instance.Configure(EventStore.Instance, getInstance);
+            AggregateBus.Instance.Configure(EventBus.Instance, AggregateCache.Instance);
 
             const string createdMessage = "hello, I am created!";
 
@@ -99,8 +99,8 @@ namespace DDD.Light.CQRS.InProcess.Tests
             var ar = new SomeAggregateRoot(id, createdMessage);
 
             // Assert
-            Assert.AreEqual(1, EventStore.EventStore.Instance.Count());
-            var firstEventType = EventStore.EventStore.Instance.GetAll().Result.First();
+            Assert.AreEqual(1, EventStore.Instance.Count());
+            var firstEventType = EventStore.Instance.GetAll().Result.First();
             Assert.AreEqual(typeof(SomeAggregateRootCreated), Type.GetType(firstEventType.EventType));
             Assert.AreEqual(createdMessage, ((SomeAggregateRootCreated)serializationStrategy.DeserializeEvent(firstEventType.SerializedEvent, typeof(SomeAggregateRootCreated))).Message);
         }
