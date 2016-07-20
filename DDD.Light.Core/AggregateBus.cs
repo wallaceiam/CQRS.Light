@@ -39,7 +39,7 @@ namespace DDD.Light.Core
             _eventBus = eventBus;
             _registeredAggregateCaches.Add(aggregateCache);
 
-            eventBus.Subscribe((AggregateCacheCleared e) => aggregateCache.Clear(Guid.Parse(e.SerializedAggregateId), e.AggregateType));
+            eventBus.Subscribe((AggregateCacheCleared e) => aggregateCache.ClearAsync(Guid.Parse(e.SerializedAggregateId), e.AggregateType));
         }
 
         private AggregateBus()

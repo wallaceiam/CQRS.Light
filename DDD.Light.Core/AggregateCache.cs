@@ -65,9 +65,10 @@ namespace DDD.Light.Core
                 ApplyEvent<TAggregate, TEvent>(@event, aggregate);
         }
 
-        public void Clear(Guid aggregateId, Type aggregateType)
-        {           
+        public Task ClearAsync(Guid aggregateId, Type aggregateType)
+        {
             // todo: get repository of Type and delete by aggregateId
+            throw new NotImplementedException();
         }
 
         private static void ApplyEvent<TAggregate, TEvent>(TEvent @event, TAggregate aggregate) where TAggregate : IAggregateRoot

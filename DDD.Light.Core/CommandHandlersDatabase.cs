@@ -9,8 +9,7 @@ namespace DDD.Light.CQRS
     {
         private static volatile ICommandHandlersDatabase<T> _instance;
         private static object token = new Object();
-        //private readonly List<Action<T>> _registeredHandlerActions;
-        private readonly List<Task<T>> _registeredHandlerActions;
+        private readonly List<Func<T, Task>> _registeredHandlerActions;
 
         public static ICommandHandlersDatabase<T> Instance
         {
@@ -31,7 +30,7 @@ namespace DDD.Light.CQRS
         private CommandHandlersDatabase()
         {
             _registeredHandlerActions = //new List<Action<T>>();
-                new List<Task<T>>();
+                new List<Func<T, Task>>();
         }
 
         public void Add(ICommandHandler<T> commandHandler)
@@ -39,12 +38,12 @@ namespace DDD.Light.CQRS
             _registeredHandlerActions.Add(commandHandler.HandleAsync);
         }
 
-        public void Add(Action<T> commandHandlerAction)
+        public void Add(Func<T, Task> commandHandlerAction)
         {
             _registeredHandlerActions.Add(commandHandlerAction);
         }
 
-        public IEnumerable<Action<T>> Get()
+        public IEnumerable<Func<T, Task>> Get()
         {
             return _registeredHandlerActions;
         }

@@ -13,20 +13,20 @@ namespace DDD.Light.CQRS
 
         public Transaction(){}
 
-        public Transaction(T message, IEnumerable<Action<T>> handlers)
+        public Transaction(T message, IEnumerable<Func<T, Task>> handlers)
         {
             Message = message;
             Id = Guid.NewGuid();
-            ProcessedActions = new List<Action<T>>();
-            ErroredOutActions = new Dictionary<Action<T>, Exception>();
-            NotProcessedActions = new Queue<Action<T>>(handlers);
+            ProcessedActions = new List<Func<T, Task>>();
+            ErroredOutActions = new Dictionary<Func<T, Task>, Exception>();
+            NotProcessedActions = new Queue<Func<T, Task>>(handlers);
         }
 
         public Guid Id { get; private set; }
         public T Message { get; set; }
-        public List<Action<T>> ProcessedActions { get; private set; }
-        public IDictionary<Action<T>, Exception> ErroredOutActions { get; private set; }
-        public Queue<Action<T>> NotProcessedActions { get; private set; }
+        public List<Func<T, Task>> ProcessedActions { get; private set; }
+        public IDictionary<Func<T, Task>, Exception> ErroredOutActions { get; private set; }
+        public Queue<Func<T, Task>> NotProcessedActions { get; private set; }
 
         public void Commit()
         {

@@ -33,7 +33,7 @@ namespace DDD.Light.CQRS
             CommandHandlersDatabase<T>.Instance.Add(handler);
         }
 
-        public void Subscribe<T>(Action<T> handleMethod)
+        public void Subscribe<T>(Func<T, Task> handleMethod)
         {
             CommandHandlersDatabase<T>.Instance.Add(handleMethod);
         }

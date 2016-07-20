@@ -9,7 +9,7 @@ namespace DDD.Light.CQRS
     {
         private static volatile IEventHandlersDatabase<T> _instance;
         private static object token = new Object();
-        private readonly List<Task<T>> _registeredHandlerActions;
+        private readonly List<Func<T, Task>> _registeredHandlerActions;
 
         public static IEventHandlersDatabase<T> Instance
         {
@@ -29,7 +29,7 @@ namespace DDD.Light.CQRS
 
         private EventHandlersDatabase()
         {
-            _registeredHandlerActions = new List<Task<T>>();
+            _registeredHandlerActions = new List<Func<T, Task>>();
             _instanceID = Guid.NewGuid();
         }
 
@@ -44,12 +44,12 @@ namespace DDD.Light.CQRS
             _registeredHandlerActions.Add(eventHandler.HandleAsync);
         }
 
-        public void Add(Action<T> eventHandlerAction)
+        public void Add(Func<T, Task> eventHandlerAction)
         {
-            _registeredHandlerActions.Add(new Task<T>(eventHandlerAction));
+            _registeredHandlerActions.Add(eventHandlerAction);
         }
 
-        public IEnumerable<Task<T>> Get()
+        public IEnumerable<Func<T,Task>> Get()
         {
             return _registeredHandlerActions;
         }

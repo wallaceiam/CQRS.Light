@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FluentAssertions;
 using DDD.Light.Contracts.CQRS;
 using DDD.Light.Contracts.AggregateCache;
+using System.Threading.Tasks;
 
 namespace DDD.Light.Core.Tests
 {
@@ -22,7 +23,7 @@ namespace DDD.Light.Core.Tests
         public void AggregateBusShouldSubscribe()
         {
             var eventBus = new Moq.Mock<IEventBus>();
-            eventBus.Setup(e => e.Subscribe<AggregateCacheCleared>(Moq.It.IsAny<Action<AggregateCacheCleared>>())).Verifiable();
+            eventBus.Setup(e => e.Subscribe<AggregateCacheCleared>(Moq.It.IsAny<Func<AggregateCacheCleared, Task>>())).Verifiable();
             var aggregateCache = new Moq.Mock<IAggregateCache>();
             //aggregateCache.Setup(x => x.Clear(Moq.It.IsAny<Guid>(), Moq.It.IsAny<Type>())).Verifiable();
 
@@ -31,7 +32,7 @@ namespace DDD.Light.Core.Tests
             AggregateBus.Instance.RegisteredAggregateCaches.Should().NotBeNull();
             AggregateBus.Instance.RegisteredAggregateCaches.Contains(aggregateCache.Object).Should().BeTrue();
 
-            eventBus.Verify(e => e.Subscribe<AggregateCacheCleared>(Moq.It.IsAny<Action<AggregateCacheCleared>>()), Moq.Times.Once);
+            eventBus.Verify(e => e.Subscribe<AggregateCacheCleared>(Moq.It.IsAny<Func<AggregateCacheCleared, Task>>()), Moq.Times.Once);
         }
 
         [TestMethod]
