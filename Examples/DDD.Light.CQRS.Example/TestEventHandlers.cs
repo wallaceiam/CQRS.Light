@@ -1,23 +1,26 @@
 ﻿using System;
-using DDD.Light.CQRS.Contracts;
+using DDD.Light.Contracts.CQRS;
+using System.Threading.Tasks;
 
 namespace DDD.Light.Messaging.Example
 {
     public class PersonArrivedEventHandler : IEventHandler<PersonArrivedEvent>
     {
-        public void Handle(PersonArrivedEvent personArrivedEvent)
+        public Task HandleAsync(PersonArrivedEvent personArrivedEvent)
         {
             Console.WriteLine("PersonArrivedEventHandler ::: Handling PersonArrivedEvent... Name: "
                 + personArrivedEvent.Name + " Location: " + personArrivedEvent.Location);
+            return Task.FromResult<object>(null);
         }
     }
 
     public class PersonLeftEventHandler : IEventHandler<PersonLeftEvent>
     {
-        public void Handle(PersonLeftEvent personLeftEvent)
+        public Task HandleAsync(PersonLeftEvent personLeftEvent)
         {
             Console.WriteLine("PersonLeftEventHandler ::: Handling PersonLeftEvent... Name: " 
                 + personLeftEvent.Name + " Location: " + personLeftEvent.Location);
+            return Task.FromResult<object>(null);
         }
     }
 
@@ -30,10 +33,11 @@ namespace DDD.Light.Messaging.Example
             _word = word;
         }
 
-        public void Handle(PersonLeftEvent personLeftEvent)
+        public Task HandleAsync(PersonLeftEvent personLeftEvent)
         {
             Console.WriteLine("PersonLeftAndSpokeEventHandler ::: Handling PersonLeftEvent... Name: " 
                 + personLeftEvent.Name + " Location: " + personLeftEvent.Location + "and said the word: " + _word);
+            return Task.FromResult<object>(null);
         }
     }
 

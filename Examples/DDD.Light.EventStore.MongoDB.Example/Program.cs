@@ -1,8 +1,11 @@
 ﻿using System;
-using DDD.Light.CQRS.InProcess;
-using DDD.Light.EventStore.Contracts;
-using DDD.Light.Repo.Contracts;
+using DDD.Light.CQRS;
+using DDD.Light.Contracts.EventStore;
+using DDD.Light.Contracts.Repo;
 using DDD.Light.Repo.MongoDB;
+using DDD.Light.Core;
+using System.Threading.Tasks;
+using DDD.Light.Repo.InMemory;
 
 namespace DDD.Light.EventStore.MongoDB.Example
 {
@@ -10,35 +13,37 @@ namespace DDD.Light.EventStore.MongoDB.Example
     {
         static void Main(string[] args)
         {
-            var personReadModel = new MongoRepository<PersonDTO>("mongodb://localhost", "DDD_Light_MongoEventStore_Example", "Person_ReadModel");
-            EventStore.Instance.Configure(new MongoRepository<AggregateEvent>("mongodb://localhost", "DDD_Light_MongoEventStore_Example", "EventStore"), new JsonEventSerializationStrategy());
-            EventBus.Instance.Configure(EventStore.Instance, new JsonEventSerializationStrategy(), false);
-
-            EventBus.Instance.Subscribe((PersonCreated personCreated) =>
+            //var personReadModel = new MongoRepository<PersonDTO>("mongodb://localhost", "DDD_Light_MongoEventStore_Example", "Person_ReadModel");
+            var personReadModel = new InMemoryRepository<PersonDTO>();
+            DDD.Light.Core.EventStore.Instance.Configure(new MongoRepository<AggregateEvent>("mongodb://localhost", "DDD_Light_MongoEventStore_Example", "EventStore"), new JsonEventSerializationStrategy());
+            EventBus.Instance.Configure(DDD.Light.Core.EventStore.Instance, new JsonEventSerializationStrategy(), false);
+            
+            AggregateBus.Instance.Configure(EventBus.Instance, AggregateCache.Instance);
+            EventBus.Instance.Subscribe(async (PersonCreated personCreated) =>
                 {                    
                     var personDTO = new PersonDTO {Id = personCreated.Id};
-                    personReadModel.SaveAsync(personDTO);
+                    await personReadModel.SaveAsync(personDTO);
                 });
             
-            EventBus.Instance.Subscribe((PersonNamed personNamed) =>
+            EventBus.Instance.Subscribe(async (PersonNamed personNamed) =>
                 {                    
-                    var personDTO = personReadModel.GetByIdAsync(personNamed.PersonId);
+                    var personDTO = await personReadModel.GetByIdAsync(personNamed.PersonId);
                     personDTO.Name = personNamed.Name;
                     personDTO.WasRenamed = false;
-                    personReadModel.Save(personDTO);
+                    await personReadModel.SaveAsync(personDTO);
                 });
 
-            EventBus.Instance.Subscribe((PersonRenamed personRenamed) =>
+            EventBus.Instance.Subscribe(async (PersonRenamed personRenamed) => 
                 {                    
-                    var personDTO = personReadModel.GetByIdAsync(personRenamed.PersonId);
+                    var personDTO = await personReadModel.GetByIdAsync(personRenamed.PersonId);
                     personDTO.Name = personRenamed.Name;                    
                     personDTO.WasRenamed = true;                    
-                    personReadModel.Save(personDTO);
+                    await personReadModel.SaveAsync(personDTO);
                 });
 
 
-            NamePerson(personReadModel);
-            NameAndRenamePerson(personReadModel);
+            NamePerson(personReadModel).ConfigureAwait(true);
+            NameAndRenamePerson(personReadModel).ConfigureAwait(true);
 
             // Drop readmodel on mongo and then run this to restore
             //EventBus.Instance.RestoreReadModel(EventBus.Instance);
@@ -47,7 +52,7 @@ namespace DDD.Light.EventStore.MongoDB.Example
             Console.ReadLine();
         }
 
-        private static void NamePerson(IRepository<PersonDTO> personReadModel)
+        private static async Task NamePerson(IRepository<PersonDTO> personReadModel)
         {
             Console.Write("Enter person's Name: ");
             var name = Console.ReadLine();
@@ -56,13 +61,13 @@ namespace DDD.Light.EventStore.MongoDB.Example
             var person = new Person(id);
             person.NameMe(name);
 
-            var personDTO = personReadModel.GetById(id);
+            var personDTO = await personReadModel.GetByIdAsync(id);
             Console.WriteLine("Person ID: " + personDTO.Id);
             Console.WriteLine("Person Name: " + personDTO.Name);
             Console.WriteLine("Person Was Renamed: " + personDTO.WasRenamed);
         }
 
-        private static void NameAndRenamePerson(IRepository<PersonDTO> personReadModel)
+        private static async Task NameAndRenamePerson(IRepository<PersonDTO> personReadModel)
         {
             Console.Write("Enter person's Name: ");
             var name = Console.ReadLine();
@@ -73,12 +78,12 @@ namespace DDD.Light.EventStore.MongoDB.Example
 
             Console.Write("Enter person's Name: ");
             var renamedName = Console.ReadLine();
-            person = EventStore.Instance.GetById<Person>(id); 
+            person = await DDD.Light.Core.EventStore.Instance.GetByIdAsync<Person>(id); 
             //can also do this: 
             // person = MongoEventStore.Instance.GetById(id) as Person;
             person.NameMe(renamedName);
 
-            var personDTO = personReadModel.GetById(id);
+            var personDTO = await personReadModel.GetByIdAsync(id);
             Console.WriteLine("Person ID: " + personDTO.Id);
             Console.WriteLine("Person Name: " + personDTO.Name);
             Console.WriteLine("Person Was Renamed: " + personDTO.WasRenamed);

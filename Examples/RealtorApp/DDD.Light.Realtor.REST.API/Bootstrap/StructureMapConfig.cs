@@ -1,13 +1,13 @@
-﻿using DDD.Light.CQRS.Contracts;
-using DDD.Light.CQRS.InProcess;
-using DDD.Light.EventStore;
-using DDD.Light.EventStore.Contracts;
+﻿using DDD.Light.Contracts.CQRS;
+using DDD.Light.CQRS;
+using DDD.Light.Contracts.EventStore;
 using DDD.Light.Realtor.API.Query;
 using DDD.Light.Realtor.API.Query.Contract;
 using DDD.Light.Realtor.API.Query.Model;
-using DDD.Light.Repo.Contracts;
+using DDD.Light.Contracts.Repo;
 using DDD.Light.Repo.MongoDB;
 using StructureMap;
+using DDD.Light.Core;
 
 namespace DDD.Light.Realtor.REST.API.Bootstrap
 {
@@ -15,16 +15,17 @@ namespace DDD.Light.Realtor.REST.API.Bootstrap
     {
         public static IContainer ConfigureDependencies()
         {
-            ObjectFactory.Initialize(x => x.Scan(scan =>
-                {
-                    scan.TheCallingAssembly();
-                    scan.WithDefaultConventions();
-                }));
+            var container = DependencyResolution.IoC.Initialize();
+            //DependencyResolution.ObjectFactory.Container(x => x.Scan(scan =>
+            //    {
+            //        scan.TheCallingAssembly();
+            //        scan.WithDefaultConventions();
+            //    }));
 
             const string mongoConnectionString = "mongodb://localhost";
             const string realtorReadModel = "DDD_Light_Realtor_ReadModel";
 
-            IContainer container = ObjectFactory.Container;
+            //IContainer container = DependencyResolution.ObjectFactory.Container;
             container.Configure(x => x.For<IRepository<Listing>>().Use<MongoRepository<Listing>>()
                                       .Ctor<string>("connectionString").Is(mongoConnectionString)
                                       .Ctor<string>("databaseName").Is(realtorReadModel)
@@ -32,7 +33,7 @@ namespace DDD.Light.Realtor.REST.API.Bootstrap
                 );
             container.Configure(x => x.For<IActiveListings>().Use<ActiveListings>());
             container.Configure(x => x.For<ICommandBus>().Use(CommandBus.Instance));
-            container.Configure(x => x.For<IEventStore>().Use(EventStore.EventStore.Instance));
+            container.Configure(x => x.For<IEventStore>().Use(EventStore.Instance));
             return container;
         }
     }

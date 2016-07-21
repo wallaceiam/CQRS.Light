@@ -2,14 +2,14 @@
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
-using DDD.Light.AggregateCache;
-using DDD.Light.CQRS.InProcess;
-using DDD.Light.EventStore;
-using DDD.Light.EventStore.Contracts;
+using DDD.Light.Core;
+using DDD.Light.CQRS;
+using DDD.Light.Contracts.EventStore;
 using DDD.Light.Realtor.API.Command.Realtor;
 using DDD.Light.Realtor.REST.API.Bootstrap;
 using DDD.Light.Repo.MongoDB;
 using StructureMap;
+using System.Threading.Tasks;
 
 namespace DDD.Light.Realtor.REST.API
 {
@@ -27,19 +27,19 @@ namespace DDD.Light.Realtor.REST.API
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             SetUpIoC();
 
-            EventStore.EventStore.Instance.Configure(new MongoRepository<AggregateEvent>("mongodb://localhost", "DDD_Light_Realtor", "EventStore"), new JsonEventSerializationStrategy());
-            EventBus.Instance.Configure(EventStore.EventStore.Instance, new JsonEventSerializationStrategy(), false);
+            EventStore.Instance.Configure(new MongoRepository<AggregateEvent>("mongodb://localhost", "DDD_Light_Realtor", "EventStore"), new JsonEventSerializationStrategy());
+            EventBus.Instance.Configure(EventStore.Instance, new JsonEventSerializationStrategy(), false);
 
-            AggregateCache.AggregateCache.Instance.Configure(EventStore.EventStore.Instance, ObjectFactory.GetInstance);
-            AggregateBus.InProcess.AggregateBus.Instance.Configure(EventBus.Instance, AggregateCache.AggregateCache.Instance);
+            AggregateCache.Instance.Configure(EventStore.Instance, DependencyResolution.ObjectFactory.Container.GetInstance);
+            AggregateBus.Instance.Configure(EventBus.Instance, AggregateCache.Instance);
 
-            InitApp(EventStore.EventStore.Instance);
+            InitApp(EventStore.Instance);
         }
 
         private static void InitApp(IEventStore eventStore)
         {
-            HandlerSubscribtions.SubscribeAllHandlers(ObjectFactory.GetInstance);
-            CreateRealtorIfNoneExist(eventStore);
+            HandlerSubscribtions.SubscribeAllHandlers(DependencyResolution.ObjectFactory.Container.GetInstance);
+            CreateRealtorIfNoneExist(eventStore).ConfigureAwait(false);
         }
 
         private static void SetUpIoC()
@@ -48,10 +48,10 @@ namespace DDD.Light.Realtor.REST.API
             GlobalConfiguration.Configuration.DependencyResolver = new StructureMapDependencyResolver(container);
         }
 
-        private static void CreateRealtorIfNoneExist(IEventStore eventStore)
+        private static async Task CreateRealtorIfNoneExist(IEventStore eventStore)
         {
             var realtorId = Guid.Parse("10000000-0000-0000-0000-000000000000");
-            if (eventStore.GetById(realtorId) == null)
+            if (await eventStore.GetByIdAsync(realtorId) == null)
                 CommandBus.Instance.Dispatch(new SetUpRealtor(realtorId));
         }
     }

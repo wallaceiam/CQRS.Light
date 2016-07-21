@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DDD.Light.Repo.MongoDB.Example
 {
@@ -7,6 +8,11 @@ namespace DDD.Light.Repo.MongoDB.Example
     {
         private static void Main(string[] args)
         {
+            RunAsync().ConfigureAwait(false);
+        }
+
+        private static async Task RunAsync()
+        { 
             // before running example, make sure MongoDB is running by executing %MONGO_INSTALL_DIR%\bin\mongod.exe
 
             // connection string to your MongoDB
@@ -35,16 +41,16 @@ namespace DDD.Light.Repo.MongoDB.Example
             };
 
             // save to repository
-            personRepository.SaveAsync(newPerson);
+            await personRepository.SaveAsync(newPerson);
 
             Console.WriteLine("person saved");
 
             // get by id
-            var personFoundById = personRepository.GetByIdAsync(id);
+            var personFoundById = await personRepository.GetByIdAsync(id);
             Console.WriteLine("get by id " + id + " result: " + personFoundById.FirstName + " " + personFoundById.LastName);
 
             // query repository
-            var peopleFoundByQuery = personRepository.GetAsync().Where(p => p.FirstName == newPerson.FirstName);
+            var peopleFoundByQuery = (await personRepository.GetAsync()).Where(p => p.FirstName == newPerson.FirstName);
             Console.WriteLine("get by matching FirstName == " + newPerson.FirstName);
             peopleFoundByQuery.ToList().ForEach(p => Console.WriteLine(" match: " + p.FirstName + " " + p.LastName));
             

@@ -1,5 +1,5 @@
 ﻿using System;
-using DDD.Light.CQRS.InProcess;
+using DDD.Light.CQRS;
 
 namespace DDD.Light.EventStore.MongoDB.Example
 {

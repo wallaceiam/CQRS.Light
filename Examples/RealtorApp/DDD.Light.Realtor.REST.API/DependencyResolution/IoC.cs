@@ -17,19 +17,47 @@
 
 
 using StructureMap;
-namespace DDD.Light.Realtor.REST.API.DependencyResolution {
-    public static class IoC {
-        public static IContainer Initialize() {
-            ObjectFactory.Initialize(x =>
+using StructureMap.Graph;
+using System;
+using System.Threading;
+
+namespace DDD.Light.Realtor.REST.API.DependencyResolution
+{
+    public static class IoC
+    {
+        public static IContainer Initialize()
+        {
+            ObjectFactory.Container.Configure(x =>
                         {
                             x.Scan(scan =>
                                     {
                                         scan.TheCallingAssembly();
                                         scan.WithDefaultConventions();
                                     });
-            //                x.For<IExample>().Use<Example>();
+                            //                x.For<IExample>().Use<Example>();
                         });
+
             return ObjectFactory.Container;
+        }
+    }
+
+    public static class ObjectFactory
+
+    {
+        private static readonly Lazy<Container> _containerBuilder = 
+            new Lazy<Container>(() => new Container(), LazyThreadSafetyMode.ExecutionAndPublication);
+
+        public static IContainer Container
+        {
+            get { return _containerBuilder.Value; }
+        }
+
+        public static void Initialize<T>() where T : Registry, new()
+        {
+            Container.Configure(x =>
+            {
+                x.AddRegistry<T>();
+            });
         }
     }
 }

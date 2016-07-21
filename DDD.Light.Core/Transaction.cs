@@ -2,15 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using log4net;
 using System.Threading.Tasks;
 
 namespace DDD.Light.CQRS
 {
     public class Transaction<T>
     {
-        private readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
         public Transaction(){}
 
         public Transaction(T message, IEnumerable<Func<T, Task>> handlers)
@@ -101,7 +98,7 @@ namespace DDD.Light.CQRS
                 "[PROCESSED ACTION HANDLERS: {5}]",
                 Id, Message.GetType(), Message, string.Join(" ^^^ ", errors), string.Join(", ", notProcessedEventHandlerTypes), string.Join(", ", processedEventHandlerTypes));
 
-            _log.Error(message);
+            //To Do
         }
 
     }
