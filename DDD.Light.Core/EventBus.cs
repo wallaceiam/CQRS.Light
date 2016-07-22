@@ -45,14 +45,14 @@ namespace DDD.Light.CQRS
 
         public async Task PublishAsync<TEvent>(Type aggregateType, Guid aggregateId, TEvent @event)
         {
-            await StoreEvent(aggregateType, aggregateId, @event);
-            HandleEvent(@event);
+            await StoreEventAsync(aggregateType, aggregateId, @event);
+            await HandleEventAsync(@event);
         }
 
         public async Task PublishAsync<TAggregate, T>(Guid aggregateId, T @event)
         {
-            await StoreEvent(typeof(TAggregate), aggregateId, @event);
-            HandleEvent(@event);
+            await StoreEventAsync(typeof(TAggregate), aggregateId, @event);
+            await HandleEventAsync(@event);
         }
 
         //todo: make reason behind checkLatestEventTimestampPriorToSavingToEventStore less ambiguious
@@ -63,12 +63,15 @@ namespace DDD.Light.CQRS
             _checkLatestEventTimestampPriorToSavingToEventStore = checkLatestEventTimestampPriorToSavingToEventStore;
         }
 
-        private void HandleEvent<T>(T @event)
+        private async Task HandleEventAsync<T>(T @event)
         {
             try
             {
                 if (!Equals(@event, default(T)))
-                    new Transaction<T>(@event, EventHandlersDatabase<T>.Instance.Get().ToList()).Commit();
+                {
+                    var transaction = new Transaction<T>(@event, EventHandlersDatabase<T>.Instance.Get().ToList());
+                    await transaction.CommitAsync();
+                }
             }
             catch (Exception)
             {
@@ -76,7 +79,7 @@ namespace DDD.Light.CQRS
             }
         }
 
-        private async Task StoreEvent<TEvent>(Type aggregateType, Guid aggregateId, TEvent @event)
+        private async Task StoreEventAsync<TEvent>(Type aggregateType, Guid aggregateId, TEvent @event)
         {
             if (_eventStore == null) throw new ApplicationException("Event Store is not configured. Use 'EventBus.Instance.Configure(eventStore, eventSerializationStrategy);' to configure it.");
             try
@@ -91,7 +94,7 @@ namespace DDD.Light.CQRS
                         await PublishAsync(GetType(), aggregateId, new AggregateCacheCleared(serializedAggregateId, typeof(Guid), aggregateType));
                     }
                 }
-                _eventStore.Save(new AggregateEvent
+                await _eventStore.SaveAsync(new AggregateEvent
                     {
                         Id = Guid.NewGuid(),
                         AggregateType = aggregateType.AssemblyQualifiedName,
@@ -104,7 +107,7 @@ namespace DDD.Light.CQRS
             }
             catch (Exception ex)
             {
-                throw new ApplicationException("DDD.Light.CQRS.InProcess.EventBus -> StoreEvent<T>: Saving to event store failed", ex);
+                throw new ApplicationException("DDD.Light.Core.InProcess.EventBus -> StoreEvent<T>: Saving to event store failed", ex);
             }
         }
 

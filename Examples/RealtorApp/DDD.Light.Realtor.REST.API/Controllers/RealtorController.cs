@@ -7,6 +7,7 @@ using DDD.Light.Contracts.CQRS;
 using DDD.Light.Realtor.API.Command.Realtor;
 using DDD.Light.Realtor.API.Query.Contract;
 using DDD.Light.Realtor.REST.API.Resources;
+using System.Threading.Tasks;
 
 namespace DDD.Light.Realtor.REST.API.Controllers
 {
@@ -22,7 +23,7 @@ namespace DDD.Light.Realtor.REST.API.Controllers
         }
 
         [POST("api/realtor/listings")]
-        public HttpResponseMessage PostListing([FromBody]RealtorListing realtorListing)
+        public async Task<HttpResponseMessage> PostListing([FromBody]RealtorListing realtorListing)
         {
             var listingId = Guid.NewGuid();
             var postListing = new PostListing(
@@ -37,7 +38,7 @@ namespace DDD.Light.Realtor.REST.API.Controllers
                 realtorListing.Price);
             try
             {
-                _commandBus.Dispatch(postListing);
+                await _commandBus.DispatchAsync(postListing);
             }
             catch (Exception ex)
             {

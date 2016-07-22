@@ -38,20 +38,13 @@ namespace DDD.Light.CQRS
             CommandHandlersDatabase<T>.Instance.Add(handleMethod);
         }
 
-        public void Dispatch<T>(T command) 
-        {
-            if (!Equals(command, default(T)))
-                new Transaction<T>(command, CommandHandlersDatabase<T>.Instance.Get().ToList()).Commit();
-        }
-
-        public Task DispatchAsync<T>(T command)
+        public async Task DispatchAsync<T>(T command) 
         {
             if (!Equals(command, default(T)))
             {
                 var transaction = new Transaction<T>(command, CommandHandlersDatabase<T>.Instance.Get().ToList());
-                return transaction.CommitAsync();
+                await transaction.CommitAsync();
             }
-            return Task.FromResult(0);
         }
     }
 }

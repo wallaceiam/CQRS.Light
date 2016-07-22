@@ -2,10 +2,10 @@
 using DDD.Light.CQRS;
 using DDD.Light.Contracts.EventStore;
 using DDD.Light.Contracts.Repo;
-using DDD.Light.Repo.MongoDB;
 using DDD.Light.Core;
 using System.Threading.Tasks;
 using DDD.Light.Repo.InMemory;
+using DDD.Light.Repo.MongoDB;
 
 namespace DDD.Light.EventStore.MongoDB.Example
 {
@@ -14,8 +14,12 @@ namespace DDD.Light.EventStore.MongoDB.Example
         static void Main(string[] args)
         {
             //var personReadModel = new MongoRepository<PersonDTO>("mongodb://localhost", "DDD_Light_MongoEventStore_Example", "Person_ReadModel");
+            //var aggregateEventRepo = new MongoRepository<AggregateEvent>("mongodb://localhost", "DDD_Light_MongoEventStore_Example", "EventStore");
+
             var personReadModel = new InMemoryRepository<PersonDTO>();
-            DDD.Light.Core.EventStore.Instance.Configure(new MongoRepository<AggregateEvent>("mongodb://localhost", "DDD_Light_MongoEventStore_Example", "EventStore"), new JsonEventSerializationStrategy());
+            var aggregateEventRepo = new InMemoryRepository<AggregateEvent>();
+
+            DDD.Light.Core.EventStore.Instance.Configure(aggregateEventRepo, new JsonEventSerializationStrategy());
             EventBus.Instance.Configure(DDD.Light.Core.EventStore.Instance, new JsonEventSerializationStrategy(), false);
             
             AggregateBus.Instance.Configure(EventBus.Instance, AggregateCache.Instance);
@@ -44,9 +48,6 @@ namespace DDD.Light.EventStore.MongoDB.Example
 
             NamePerson(personReadModel).ConfigureAwait(true);
             NameAndRenamePerson(personReadModel).ConfigureAwait(true);
-
-            // Drop readmodel on mongo and then run this to restore
-            //EventBus.Instance.RestoreReadModel(EventBus.Instance);
 
 
             Console.ReadLine();

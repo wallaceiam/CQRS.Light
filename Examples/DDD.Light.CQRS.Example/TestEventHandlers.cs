@@ -36,7 +36,7 @@ namespace DDD.Light.Messaging.Example
         public Task HandleAsync(PersonLeftEvent personLeftEvent)
         {
             Console.WriteLine("PersonLeftAndSpokeEventHandler ::: Handling PersonLeftEvent... Name: " 
-                + personLeftEvent.Name + " Location: " + personLeftEvent.Location + "and said the word: " + _word);
+                + personLeftEvent.Name + " Location: " + personLeftEvent.Location + " and said the word: " + _word);
             return Task.FromResult<object>(null);
         }
     }

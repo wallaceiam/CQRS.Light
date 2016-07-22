@@ -40,7 +40,7 @@ namespace DDD.Light.CQRS
             }
             catch (Exception ex)
             {
-                throw new ApplicationException(string.Format("DDD.Light.CQRS.AggregateRoot -> PublishOnAggregateBusThroughReflection: Failed to get and invoke Publish method on AggregateBus.Instance. Event type {0} did not get published", typeof(TEvent)), ex);
+                throw new ApplicationException(string.Format("DDD.Light.Core.AggregateRoot -> PublishOnAggregateBusThroughReflection: Failed to get and invoke Publish method on AggregateBus.Instance. Event type {0} did not get published", typeof(TEvent)), ex);
             }
         }
 
@@ -53,7 +53,7 @@ namespace DDD.Light.CQRS
             }
             catch (Exception ex)
             {
-                throw new ApplicationException(string.Format("DDD.Light.CQRS.InProcess.AggregateRoot -> ApplyEventOnAggregate: Failed to apply event on aggregate type: {0} through reflection. Event type {1} did not get applied", GetType(), typeof(TEvent)), ex);
+                throw new ApplicationException(string.Format("DDD.Light.Core.InProcess.AggregateRoot -> ApplyEventOnAggregate: Failed to apply event on aggregate type: {0} through reflection. Event type {1} did not get applied", GetType(), typeof(TEvent)), ex);
             }
         }
     }

@@ -52,7 +52,7 @@ namespace DDD.Light.Realtor.REST.API
         {
             var realtorId = Guid.Parse("10000000-0000-0000-0000-000000000000");
             if (await eventStore.GetByIdAsync(realtorId) == null)
-                CommandBus.Instance.Dispatch(new SetUpRealtor(realtorId));
+                await CommandBus.Instance.DispatchAsync(new SetUpRealtor(realtorId));
         }
     }
 }

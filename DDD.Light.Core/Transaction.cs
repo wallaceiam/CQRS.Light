@@ -25,7 +25,7 @@ namespace DDD.Light.CQRS
         public IDictionary<Func<T, Task>, Exception> ErroredOutActions { get; private set; }
         public Queue<Func<T, Task>> NotProcessedActions { get; private set; }
 
-        public void Commit()
+        /*public void Commit()
         {
             while (NotProcessedActions.Count > 0)
             {
@@ -42,16 +42,16 @@ namespace DDD.Light.CQRS
                     throw;
                 }
             }
-        }
+        }*/
 
-        public Task CommitAsync()
+        public async Task CommitAsync()
         {
             while (NotProcessedActions.Count > 0)
             {
                 var handler = NotProcessedActions.Dequeue();
                 try
                 {
-                    handler.Invoke(Message);
+                    await handler.Invoke(Message);
                     ProcessedActions.Add(handler);
                 }
                 catch (Exception ex)
@@ -61,8 +61,6 @@ namespace DDD.Light.CQRS
                     throw;
                 }
             }
-
-            return Task.FromResult(0);
         }
 
         //TODO: better logging

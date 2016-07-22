@@ -65,7 +65,7 @@ namespace DDD.Light.Core
             if (_repo == null) throw new Exception("Event Store Repository is not configured. Use EventStore.Instance.Configure(); to configure");
         }
 
-        public async Task<TAggregate> GetById<TAggregate>(Guid id) 
+        public async Task<TAggregate> GetByIdAsync<TAggregate>(Guid id) 
         {
             VerifyRepoIsConfigured();
 
@@ -131,10 +131,10 @@ namespace DDD.Light.Core
             return aggregate;
         }
 
-        public void Save(AggregateEvent aggregateEvent)
+        public async Task SaveAsync(AggregateEvent aggregateEvent)
         {
             VerifyRepoIsConfigured();
-            _repo.SaveAsync(aggregateEvent);
+            await _repo.SaveAsync(aggregateEvent);
         }
 
         public async Task<IEnumerable<TEvent>> GetEventsAsync<TEvent>()
@@ -151,11 +151,6 @@ namespace DDD.Light.Core
 
             return deserializedEvents;
 
-        }
-
-        Task<TAggregate> IEventStore.GetByIdAsync<TAggregate>(Guid id)
-        {
-            throw new NotImplementedException();
         }
     }
 }
