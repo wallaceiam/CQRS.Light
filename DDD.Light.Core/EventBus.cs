@@ -118,21 +118,22 @@ namespace DDD.Light.CQRS
 
         public async Task RestoreReadModelAync()
         {
-            (await _eventStore.GetAllAsync()).ToList().ForEach(HandleRestoreReadModelEvent);
+            (await _eventStore.GetAllAsync()).ToList().ForEach(async x => await HandleRestoreReadModelEventAsync(x));
         }
 
         public async Task RestoreReadModelAync(DateTime until)
         {
-            (await _eventStore.GetAllAsync(until)).ToList().ForEach(HandleRestoreReadModelEvent);
+            (await _eventStore.GetAllAsync(until)).ToList().ForEach(async x => await HandleRestoreReadModelEventAsync(x));
         }
 
-        private void HandleRestoreReadModelEvent(AggregateEvent aggregateEvent)
+        private async Task HandleRestoreReadModelEventAsync(AggregateEvent aggregateEvent)
         {
             var eventType = Type.GetType(aggregateEvent.EventType);
             var @event = _eventSerializationStrategy.DeserializeEvent(aggregateEvent.SerializedEvent, eventType);
-            GetType().GetMethod("HandleEvent", BindingFlags.NonPublic | BindingFlags.Instance)
-                     .MakeGenericMethod(eventType)
-                     .Invoke(Instance, new[] {@event});
+            var method = GetType().GetMethod("HandleEventAsync", BindingFlags.NonPublic | BindingFlags.Instance)
+                     .MakeGenericMethod(eventType);
+            var result = (Task)method.Invoke(Instance, new[] {@event});
+            await result;
         }
 
     }

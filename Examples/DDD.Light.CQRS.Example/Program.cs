@@ -42,6 +42,8 @@ namespace DDD.Light.Messaging.Example
             //            EventBus.Instance.Publish(Id, new PersonArrivedEvent("Jane Doe", "New York"));
 
             //log.Info("------- END ---------");
+
+            EventBus.Instance.RestoreReadModelAync().ConfigureAwait(true);
             Console.WriteLine("------- END ---------");
 
             Console.ReadLine();

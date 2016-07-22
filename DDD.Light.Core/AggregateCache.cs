@@ -44,6 +44,11 @@ namespace DDD.Light.Core
             return _getAggregateCacheRepositoryInstance(typeof(IRepository<TAggregate>)) as IRepository<TAggregate>;
         }
 
+        private IRepository<TAggregate> GetRepository<TAggregate>(TAggregate type)
+        {
+            return _getAggregateCacheRepositoryInstance(typeof(IRepository<TAggregate>)) as IRepository<TAggregate>;
+        }
+
         public async Task<TAggregate> GetByIdAsync<TAggregate>(Guid id) where TAggregate : IAggregateRoot
         {
             var cachedAggregate = await GetRepository<TAggregate>().GetByIdAsync(id);
@@ -65,10 +70,10 @@ namespace DDD.Light.Core
                 ApplyEvent<TAggregate, TEvent>(@event, aggregate);
         }
 
-        public Task ClearAsync(Guid aggregateId, Type aggregateType)
+        public async Task ClearAsync(Guid aggregateId, Type aggregateType)
         {
-            // todo: get repository of Type and delete by aggregateId
-            throw new NotImplementedException();
+            var aggregateRepo = GetRepository(aggregateType);
+            await aggregateRepo.DeleteAsync(aggregateId);
         }
 
         private static void ApplyEvent<TAggregate, TEvent>(TEvent @event, TAggregate aggregate) where TAggregate : IAggregateRoot
