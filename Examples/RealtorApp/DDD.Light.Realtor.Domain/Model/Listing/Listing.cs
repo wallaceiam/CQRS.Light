@@ -23,18 +23,18 @@ namespace DDD.Light.Realtor.Domain.Model.Listing
             _price = price;
             _posted = false;
 
-            PublishAndApplyEvent(new ListingCreated(id, location, description, price));
+            PublishAndApplyEventAsync(new ListingCreated(id, location, description, price)).ConfigureAwait(true);
         }
 
         // API
         public void Remove()
         {
-            PublishAndApplyEvent(new ListingRemoved(Id));
+            PublishAndApplyEventAsync(new ListingRemoved(Id)).ConfigureAwait(true);
         }
         
         public void Post()
         {
-            PublishAndApplyEvent(new ListingPosted(
+            PublishAndApplyEventAsync(new ListingPosted(
                 Id, 
                 _description.NumberOfBathrooms, 
                 _description.NumberOfBedrooms, 
@@ -44,7 +44,7 @@ namespace DDD.Light.Realtor.Domain.Model.Listing
                 _location.State,
                 _location.Zip,
                 _price)
-            );
+            ).ConfigureAwait(true);
         }
 
         // Apply Domain Events to rebuild aggregate

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <!--<title>$title$</title>-->
+    <title>DDD.Light.Repository.MongoDB</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>https://raw.github.com/wallaceiam/DDD.Light/master/MIT-LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/wallaceiam/DDD.Light</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A MongoDB Repository Implemenation</description>
+    <copyright>$copyright$</copyright>
+    <releaseNotes>Initial Release</releaseNotes>
+    <tags>DDD Light DDD Domain Driven Design CQRS Event Sourcing EventStore MongoDB DDD.Light.Repo.MongoDB</tags>
+  </metadata>
+</package>

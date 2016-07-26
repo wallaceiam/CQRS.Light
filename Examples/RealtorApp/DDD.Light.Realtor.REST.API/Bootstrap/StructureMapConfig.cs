@@ -5,7 +5,7 @@ using DDD.Light.Realtor.API.Query;
 using DDD.Light.Realtor.API.Query.Contract;
 using DDD.Light.Realtor.API.Query.Model;
 using DDD.Light.Contracts.Repo;
-using DDD.Light.Repo.MongoDB;
+using DDD.Light.Repository.MongoDB;
 using StructureMap;
 using DDD.Light.Core;
 

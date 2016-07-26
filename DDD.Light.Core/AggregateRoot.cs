@@ -3,6 +3,7 @@ using System.Reflection;
 using DDD.Light.Contracts.CQRS;
 using DDD.Light.Contracts.Repo;
 using DDD.Light.Core;
+using System.Threading.Tasks;
 
 namespace DDD.Light.CQRS
 {
@@ -18,25 +19,26 @@ namespace DDD.Light.CQRS
             Id = id;
         }
 
-        public void PublishAndApplyEvent<TAggregate, TEvent>(TEvent @event) where TAggregate : IAggregateRoot
+        public async Task PublishAndApplyEventAsync<TAggregate, TEvent>(TEvent @event) where TAggregate : IAggregateRoot
         {
-            AggregateBus.Instance.Publish<TAggregate, TEvent>(Id, @event);
+            await AggregateBus.Instance.PublishAsync<TAggregate, TEvent>(Id, @event);
             ApplyEventOnAggregate(@event);
         }
 
-        public void PublishAndApplyEvent<TEvent>(TEvent @event)
+        public async Task PublishAndApplyEventAsync<TEvent>(TEvent @event)
         {
-            PublishOnAggregateBusThroughReflection(@event);
+            await PublishOnAggregateBusThroughReflectionAsync(@event);
             ApplyEventOnAggregate(@event);
         }
 
-        private void PublishOnAggregateBusThroughReflection<TEvent>(TEvent @event)
+        private async Task PublishOnAggregateBusThroughReflectionAsync<TEvent>(TEvent @event)
         {
             try
             {
-                var publishMethod = typeof (AggregateBus).GetMethod("Publish");
+                var publishMethod = typeof (AggregateBus).GetMethod("PublishAsync");
                 var genericPublishMethod = publishMethod.MakeGenericMethod(new[] {GetType(), typeof (TEvent)});
-                genericPublishMethod.Invoke(AggregateBus.Instance, new[] {Id, @event as Object});
+                var result = (Task)genericPublishMethod.Invoke(AggregateBus.Instance, new[] {Id, @event as Object});
+                await result;
             }
             catch (Exception ex)
             {

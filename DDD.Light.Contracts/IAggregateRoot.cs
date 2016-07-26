@@ -1,10 +1,11 @@
 ﻿using DDD.Light.Contracts.Repo;
+using System.Threading.Tasks;
 
 namespace DDD.Light.Contracts.CQRS
 {
     public interface IAggregateRoot : IEntity
     {
-        void PublishAndApplyEvent<TEvent>(TEvent @event);
-        void PublishAndApplyEvent<TAggregate, TEvent>(TEvent @event) where TAggregate : IAggregateRoot;
+        Task PublishAndApplyEventAsync<TEvent>(TEvent @event);
+        Task PublishAndApplyEventAsync<TAggregate, TEvent>(TEvent @event) where TAggregate : IAggregateRoot;
     }
 }

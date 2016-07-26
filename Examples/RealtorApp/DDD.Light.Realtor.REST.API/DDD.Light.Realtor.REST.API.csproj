@@ -226,6 +226,14 @@
       <Project>{82915045-7657-4840-bf45-4c72d9cc435c}</Project>
       <Name>DDD.Light.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\DDD.Light.Repository.InMemory\DDD.Light.Repository.InMemory.csproj">
+      <Project>{0d146339-2755-4610-bd55-5c2fedfa02a5}</Project>
+      <Name>DDD.Light.Repository.InMemory</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\DDD.Light.Repository.MongoDB\DDD.Light.Repository.MongoDB.csproj">
+      <Project>{ad1f872f-e8c6-41c7-a7f0-21ccb3ae1ec1}</Project>
+      <Name>DDD.Light.Repository.MongoDB</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DDD.Light.Realtor.API\DDD.Light.Realtor.API.csproj">
       <Project>{90C52FD6-3998-4A1C-8682-59002C7B6AA4}</Project>
       <Name>DDD.Light.Realtor.API</Name>
@@ -233,10 +241,6 @@
     <ProjectReference Include="..\DDD.Light.Realtor.Application\DDD.Light.Realtor.Application.csproj">
       <Project>{AFA2227D-796B-41CE-B34F-2C917C8F959C}</Project>
       <Name>DDD.Light.Realtor.Application</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\DDD.Light.Repo.MongoDB\DDD.Light.Repo.MongoDB.csproj">
-      <Project>{AD1F872F-E8C6-41C7-A7F0-21CCB3AE1EC1}</Project>
-      <Name>DDD.Light.Repo.MongoDB</Name>
     </ProjectReference>
     <ProjectReference Include="..\DDD.Light.Realtor.Domain\DDD.Light.Realtor.Domain.csproj">
       <Project>{DA3613C6-0F35-492E-89DA-49560CA56BFF}</Project>
@@ -249,6 +253,15 @@
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Nuget|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />

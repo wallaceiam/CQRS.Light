@@ -54,6 +54,25 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Nuget|x86'">
+    <OutputPath>bin\x86\Nuget\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Nuget|AnyCPU'">
+    <OutputPath>bin\Nuget\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -84,13 +103,13 @@
       <Project>{82915045-7657-4840-bf45-4c72d9cc435c}</Project>
       <Name>DDD.Light.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\DDD.Light.Repo.InMemory\DDD.Light.Repo.InMemory.csproj">
+    <ProjectReference Include="..\..\DDD.Light.Repository.InMemory\DDD.Light.Repository.InMemory.csproj">
       <Project>{0d146339-2755-4610-bd55-5c2fedfa02a5}</Project>
-      <Name>DDD.Light.Repo.InMemory</Name>
+      <Name>DDD.Light.Repository.InMemory</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\DDD.Light.Repo.MongoDB\DDD.Light.Repo.MongoDB.csproj">
+    <ProjectReference Include="..\..\DDD.Light.Repository.MongoDB\DDD.Light.Repository.MongoDB.csproj">
       <Project>{ad1f872f-e8c6-41c7-a7f0-21ccb3ae1ec1}</Project>
-      <Name>DDD.Light.Repo.MongoDB</Name>
+      <Name>DDD.Light.Repository.MongoDB</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>https://raw.github.com/wallaceiam/DDD.Light/master/MIT-LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/wallaceiam/DDD.Light</projectUrl>
+    <!--<iconUrl></iconUrl>-->
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>DDD.Light Interfaces</description>
+    <releaseNotes>Initial Release</releaseNotes>
+    <copyright>Copyright 2016</copyright>
+    <tags>DDD Domain Driven Design CQRS Event Sourcing EventStore</tags>
+  </metadata>
+</package>

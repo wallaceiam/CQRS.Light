@@ -22,7 +22,7 @@ namespace DDD.Light.Realtor.Domain.Model.Prospect
         // API
         public void MakeAnOffer(Guid offerId)
         {
-            PublishAndApplyEvent(new OfferMade(offerId));
+            PublishAndApplyEventAsync(new OfferMade(offerId)).ConfigureAwait(true);
         }
 
         // Apply Events

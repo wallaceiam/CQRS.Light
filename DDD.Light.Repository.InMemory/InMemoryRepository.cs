@@ -4,7 +4,7 @@ using System.Linq;
 using DDD.Light.Contracts.Repo;
 using System.Threading.Tasks;
 
-namespace DDD.Light.Repo.InMemory
+namespace DDD.Light.Repository.InMemory
 {
     public class InMemoryRepository<TAggregate> : IRepository<TAggregate> where TAggregate : IEntity
     {

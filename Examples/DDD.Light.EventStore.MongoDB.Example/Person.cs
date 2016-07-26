@@ -16,7 +16,7 @@ namespace DDD.Light.EventStore.MongoDB.Example
         {
             Id = id;
             // cleanest way to call publish
-            PublishAndApplyEvent(new PersonCreated(Id));
+            PublishAndApplyEventAsync(new PersonCreated(Id)).ConfigureAwait(true);
 //            EventBus.Instance.Publish(GetType(), Id, new PersonCreated(Id));
         }
 
@@ -28,12 +28,12 @@ namespace DDD.Light.EventStore.MongoDB.Example
             if (string.IsNullOrEmpty(_name))
             {
                 // can call publish this way too, generic way
-                PublishAndApplyEvent(new PersonNamed(Id, name));
+                PublishAndApplyEventAsync(new PersonNamed(Id, name)).ConfigureAwait(true);
 //                EventBus.Instance.Publish<Person, PersonNamed>(Id, new PersonNamed(Id, name));
             }
             else
                 // yes, this will work too, non generic way
-                PublishAndApplyEvent(new PersonRenamed(Id, name));
+                PublishAndApplyEventAsync(new PersonRenamed(Id, name)).ConfigureAwait(true);
 //                EventBus.Instance.Publish(typeof(Person), Id, new PersonRenamed(Id, name));
         }
 

@@ -18,7 +18,7 @@ namespace DDD.Light.Realtor.Domain.Model.Buyer
         public Buyer(Guid id, Guid prospectId) : base(id)
         {
             _prospectId = prospectId;
-            PublishAndApplyEvent(new ProspectPromotedToBuyer(id, prospectId));
+            PublishAndApplyEventAsync(new ProspectPromotedToBuyer(id, prospectId)).ConfigureAwait(true);
         }
 
 
@@ -26,13 +26,13 @@ namespace DDD.Light.Realtor.Domain.Model.Buyer
         public void TakeOwnershipOf(Guid listingId)
         {
             // todo implement
-            PublishAndApplyEvent(new TookOwnershipOfListing());
+            PublishAndApplyEventAsync(new TookOwnershipOfListing()).ConfigureAwait(true);
         }
 
         public void NotifyOfAcceptedOffer(Guid offerId)
         {
             //todo implement
-            PublishAndApplyEvent(new NotifiedOfAcceptedOffer());
+            PublishAndApplyEventAsync(new NotifiedOfAcceptedOffer()).ConfigureAwait(true);
         }
 
         public void NotifyOfRejectedOffer(Offer.Offer offer)

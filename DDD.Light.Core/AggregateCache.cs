@@ -39,6 +39,12 @@ namespace DDD.Light.Core
             _getAggregateCacheRepositoryInstance = getAggregateCacheRepositoryInstance;
         }
 
+        public void Reset()
+        {
+            _eventStore = null;
+            _getAggregateCacheRepositoryInstance = null; 
+        }
+
         private IRepository<TAggregate> GetRepository<TAggregate>()
         {
             return _getAggregateCacheRepositoryInstance(typeof(IRepository<TAggregate>)) as IRepository<TAggregate>;

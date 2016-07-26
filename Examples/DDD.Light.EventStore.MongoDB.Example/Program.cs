@@ -4,8 +4,8 @@ using DDD.Light.Contracts.EventStore;
 using DDD.Light.Contracts.Repo;
 using DDD.Light.Core;
 using System.Threading.Tasks;
-using DDD.Light.Repo.InMemory;
-using DDD.Light.Repo.MongoDB;
+using DDD.Light.Repository.InMemory;
+using DDD.Light.Repository.MongoDB;
 
 namespace DDD.Light.EventStore.MongoDB.Example
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
-using DDD.Light.Repo.MongoDB;
-using DDD.Light.Repo.InMemory;
+using DDD.Light.Repository.MongoDB;
+using DDD.Light.Repository.InMemory;
 //using log4net;
 //using log4net.Config;
 using DDD.Light.Contracts.EventStore;

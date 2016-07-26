@@ -10,6 +10,9 @@ namespace DDD.Light.Contracts.CQRS
 
         public AggregateCacheCleared(string serializedAggregateId, Type aggregateIdType, Type aggregateType)
         {
+            if (string.IsNullOrWhiteSpace(serializedAggregateId))
+                throw new ArgumentNullException("serializedAggregateId");
+
             SerializedAggregateId = serializedAggregateId;
             AggregateIdType = aggregateIdType;
             AggregateType = aggregateType;

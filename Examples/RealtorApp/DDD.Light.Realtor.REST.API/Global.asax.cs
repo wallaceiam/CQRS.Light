@@ -7,7 +7,7 @@ using DDD.Light.CQRS;
 using DDD.Light.Contracts.EventStore;
 using DDD.Light.Realtor.API.Command.Realtor;
 using DDD.Light.Realtor.REST.API.Bootstrap;
-using DDD.Light.Repo.MongoDB;
+using DDD.Light.Repository.MongoDB;
 using StructureMap;
 using System.Threading.Tasks;
 
