@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DDD.Light.Contracts.Repo
+namespace CQRS.Light.Contracts
 {
     public interface IEntity
     {

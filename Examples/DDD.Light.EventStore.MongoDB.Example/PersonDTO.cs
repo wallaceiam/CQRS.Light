@@ -1,4 +1,4 @@
-﻿using DDD.Light.Contracts.Repo;
+﻿using CQRS.Light.Contracts;
 
 namespace DDD.Light.EventStore.MongoDB.Example
 {

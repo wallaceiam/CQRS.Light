@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using DDD.Light.Contracts.CQRS;
+using CQRS.Light.Contracts;
 using System.Threading.Tasks;
 
-namespace DDD.Light.CQRS
+namespace CQRS.Light.Core
 {
     public class EventHandlersDatabase<T> : IEventHandlersDatabase<T>
     {

@@ -1,4 +1,5 @@
-﻿using DDD.Light.Repository.MongoDB;
+﻿using CQRS.Light.Contracts;
+using CQRS.Light.Repository.MongoDB;
 using System;
 using System.Linq;
 using System.Threading.Tasks;

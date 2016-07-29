@@ -8,8 +8,8 @@
     <ProjectGuid>{0D146339-2755-4610-BD55-5C2FEDFA02A5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DDD.Light.Repository.InMemory</RootNamespace>
-    <AssemblyName>DDD.Light.Repository.InMemory</AssemblyName>
+    <RootNamespace>CQRS.Light.Repository.InMemory</RootNamespace>
+    <AssemblyName>CQRS.Light.Repository.InMemory</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -64,9 +64,9 @@
     <None Include="DDD.Light.Repository.InMemory.nuspec" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DDD.Light.Contracts\DDD.Light.Contracts.csproj">
+    <ProjectReference Include="..\DDD.Light.Contracts\CQRS.Light.Contracts.csproj">
       <Project>{a84ee5c7-916c-41d3-8bda-ab9b252c09b6}</Project>
-      <Name>DDD.Light.Contracts</Name>
+      <Name>CQRS.Light.Contracts</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

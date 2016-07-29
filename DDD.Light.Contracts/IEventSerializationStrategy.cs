@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DDD.Light.Contracts.EventStore
+namespace CQRS.Light.Contracts
 {
     public interface IEventSerializationStrategy
     {

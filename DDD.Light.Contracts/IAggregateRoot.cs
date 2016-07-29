@@ -1,7 +1,6 @@
-﻿using DDD.Light.Contracts.Repo;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
-namespace DDD.Light.Contracts.CQRS
+namespace CQRS.Light.Contracts
 {
     public interface IAggregateRoot : IEntity
     {

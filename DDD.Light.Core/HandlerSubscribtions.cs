@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
-using DDD.Light.Contracts.CQRS;
+using CQRS.Light.Contracts;
 
-namespace DDD.Light.CQRS
+namespace CQRS.Light.Core
 {
     public class HandlerSubscribtions
     {

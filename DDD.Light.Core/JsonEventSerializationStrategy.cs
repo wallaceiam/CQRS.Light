@@ -1,8 +1,8 @@
 ﻿using System;
-using DDD.Light.Contracts.EventStore;
+using CQRS.Light.Contracts;
 using Newtonsoft.Json;
 
-namespace DDD.Light.Core
+namespace CQRS.Light.Core
 {
     public class JsonEventSerializationStrategy : IEventSerializationStrategy
     {

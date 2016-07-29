@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using DDD.Light.Contracts.Repo;
 using System.Threading.Tasks;
 
-namespace DDD.Light.Contracts.EventStore
+namespace CQRS.Light.Contracts
 {
     public interface IEventStore
     {

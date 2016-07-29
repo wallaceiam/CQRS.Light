@@ -1,10 +1,8 @@
-﻿using DDD.Light.Contracts.AggregateCache;
-using DDD.Light.Contracts.CQRS;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace DDD.Light.Contracts.AggregateBus
+namespace CQRS.Light.Contracts
 {
     public interface IAggregateBus
     {

@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Reflection;
-using DDD.Light.Contracts.CQRS;
-using DDD.Light.Contracts.Repo;
-using DDD.Light.Core;
+using CQRS.Light.Contracts;
+using CQRS.Light.Core;
 using System.Threading.Tasks;
 
-namespace DDD.Light.CQRS
+namespace CQRS.Light.Core
 {
     public abstract class AggregateRoot : Entity, IAggregateRoot
     {

@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using DDD.Light.Contracts.CQRS;
-using DDD.Light.Contracts.EventStore;
+using CQRS.Light.Contracts;
 using System.Threading.Tasks;
 
-namespace DDD.Light.CQRS
+namespace CQRS.Light.Core
 {
     public class EventBus : IEventBus
     {

@@ -1,8 +1,8 @@
 ﻿using System;
-using DDD.Light.Contracts.EventStore;
+using CQRS.Light.Contracts;
 using DDD.Light.Realtor.API.Command.Realtor;
 using DDD.Light.Realtor.Domain.Model.Listing;
-using DDD.Light.CQRS;
+using CQRS.Light.Core;
 using System.Threading.Tasks;
 
 namespace DDD.Light.Realtor.Application.CommandHandler.Realtor

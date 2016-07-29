@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using DDD.Light.Contracts.CQRS;
+using CQRS.Light.Contracts;
 using FluentAssertions;
 
 namespace DDD.Light.Core.Tests

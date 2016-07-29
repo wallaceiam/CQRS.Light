@@ -1,4 +1,4 @@
-﻿using DDD.Light.CQRS;
+﻿using CQRS.Light.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;

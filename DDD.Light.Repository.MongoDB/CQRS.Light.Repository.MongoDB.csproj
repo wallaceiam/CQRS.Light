@@ -8,8 +8,8 @@
     <ProjectGuid>{AD1F872F-E8C6-41C7-A7F0-21CCB3AE1EC1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DDD.Light.Repository.MongoDB</RootNamespace>
-    <AssemblyName>DDD.Light.Repository.MongoDB</AssemblyName>
+    <RootNamespace>CQRS.Light.Repository.MongoDB</RootNamespace>
+    <AssemblyName>CQRS.Light.Repository.MongoDB</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -82,9 +82,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DDD.Light.Contracts\DDD.Light.Contracts.csproj">
+    <ProjectReference Include="..\DDD.Light.Contracts\CQRS.Light.Contracts.csproj">
       <Project>{a84ee5c7-916c-41d3-8bda-ab9b252c09b6}</Project>
-      <Name>DDD.Light.Contracts</Name>
+      <Name>CQRS.Light.Contracts</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

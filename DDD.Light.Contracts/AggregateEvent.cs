@@ -1,7 +1,6 @@
 ﻿using System;
-using DDD.Light.Contracts.Repo;
 
-namespace DDD.Light.Contracts.EventStore
+namespace CQRS.Light.Contracts
 {  
     public class AggregateEvent : IEntity
     {

@@ -1,5 +1,5 @@
 ﻿using DDD.Light.Realtor.Domain.Event.Offer;
-using DDD.Light.CQRS;
+using CQRS.Light.Core;
 using System.Threading.Tasks;
 
 namespace DDD.Light.Realtor.Application.EventHandler.Offer

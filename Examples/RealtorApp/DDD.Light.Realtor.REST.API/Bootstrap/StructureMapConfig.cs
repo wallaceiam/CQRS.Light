@@ -1,13 +1,10 @@
-﻿using DDD.Light.Contracts.CQRS;
-using DDD.Light.CQRS;
-using DDD.Light.Contracts.EventStore;
+﻿using CQRS.Light.Contracts;
+using CQRS.Light.Core;
 using DDD.Light.Realtor.API.Query;
 using DDD.Light.Realtor.API.Query.Contract;
 using DDD.Light.Realtor.API.Query.Model;
-using DDD.Light.Contracts.Repo;
-using DDD.Light.Repository.MongoDB;
+using CQRS.Light.Repository.MongoDB;
 using StructureMap;
-using DDD.Light.Core;
 
 namespace DDD.Light.Realtor.REST.API.Bootstrap
 {

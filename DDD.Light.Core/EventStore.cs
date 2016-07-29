@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using DDD.Light.Contracts.EventStore;
-using DDD.Light.Contracts.Repo;
+using CQRS.Light.Contracts;
 using System.Threading.Tasks;
 
-namespace DDD.Light.Core
+namespace CQRS.Light.Core
 {
     public class EventStore : IEventStore
     {

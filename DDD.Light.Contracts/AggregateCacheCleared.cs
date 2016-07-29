@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DDD.Light.Contracts.CQRS
+namespace CQRS.Light.Contracts
 {
     public class AggregateCacheCleared
     {

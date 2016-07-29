@@ -83,13 +83,13 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\DDD.Light.Contracts\DDD.Light.Contracts.csproj">
+    <ProjectReference Include="..\..\..\DDD.Light.Contracts\CQRS.Light.Contracts.csproj">
       <Project>{a84ee5c7-916c-41d3-8bda-ab9b252c09b6}</Project>
-      <Name>DDD.Light.Contracts</Name>
+      <Name>CQRS.Light.Contracts</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\DDD.Light.Core\DDD.Light.Core.csproj">
+    <ProjectReference Include="..\..\..\DDD.Light.Core\CQRS.Light.Core.csproj">
       <Project>{82915045-7657-4840-bf45-4c72d9cc435c}</Project>
-      <Name>DDD.Light.Core</Name>
+      <Name>CQRS.Light.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

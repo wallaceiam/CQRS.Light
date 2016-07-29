@@ -1,5 +1,5 @@
 ﻿using System;
-using DDD.Light.Contracts.Repo;
+using CQRS.Light.Contracts;
 
 namespace DDD.Light.Realtor.API.Query.Model
 {

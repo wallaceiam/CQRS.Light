@@ -2,8 +2,8 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FluentAssertions;
 using Moq;
-using DDD.Light.Contracts.CQRS;
-using DDD.Light.Contracts.EventStore;
+using CQRS.Light.Contracts;
+using CQRS.Light.Core;
 
 namespace DDD.Light.Core.Tests
 {

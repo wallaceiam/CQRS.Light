@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using DDD.Light.Contracts.CQRS;
+using CQRS.Light.Contracts;
 
-namespace DDD.Light.CQRS
+namespace CQRS.Light.Core
 {
     public class CommandBus : ICommandBus
     {

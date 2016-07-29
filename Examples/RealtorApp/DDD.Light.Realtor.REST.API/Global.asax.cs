@@ -2,12 +2,11 @@
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
-using DDD.Light.Core;
-using DDD.Light.CQRS;
-using DDD.Light.Contracts.EventStore;
+using CQRS.Light.Core;
+using CQRS.Light.Contracts;
+using CQRS.Light.Repository.MongoDB;
 using DDD.Light.Realtor.API.Command.Realtor;
 using DDD.Light.Realtor.REST.API.Bootstrap;
-using DDD.Light.Repository.MongoDB;
 using StructureMap;
 using System.Threading.Tasks;
 

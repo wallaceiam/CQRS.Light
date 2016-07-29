@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace DDD.Light.Contracts.CQRS
+namespace CQRS.Light.Contracts
 {
     public interface IEventHandlersDatabase<T>
     {

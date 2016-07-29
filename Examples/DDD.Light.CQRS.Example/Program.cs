@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Reflection;
-using DDD.Light.Repository.MongoDB;
-using DDD.Light.Repository.InMemory;
+using CQRS.Light.Repository.MongoDB;
+using CQRS.Light.Repository.InMemory;
 //using log4net;
 //using log4net.Config;
-using DDD.Light.Contracts.EventStore;
-using DDD.Light.Core;
-using DDD.Light.CQRS;
-using DDD.Light.Contracts.CQRS;
+using CQRS.Light.Core;
+using CQRS.Light.Contracts;
 
 namespace DDD.Light.Messaging.Example
 {

@@ -1,5 +1,5 @@
 ﻿using DDD.Light.Realtor.API.Command.Realtor;
-using DDD.Light.CQRS;
+using CQRS.Light.Core;
 using System.Threading.Tasks;
 
 namespace DDD.Light.Realtor.Application.CommandHandler.Realtor

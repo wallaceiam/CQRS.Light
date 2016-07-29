@@ -1,9 +1,8 @@
 ﻿using System;
-using DDD.Light.Contracts.CQRS;
-using DDD.Light.Contracts.EventStore;
+using CQRS.Light.Contracts;
 using System.Threading.Tasks;
 
-namespace DDD.Light.Contracts.AggregateCache
+namespace CQRS.Light.Contracts
 {
     public interface IAggregateCache
     {

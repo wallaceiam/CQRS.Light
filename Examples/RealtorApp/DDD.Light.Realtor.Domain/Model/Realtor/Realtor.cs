@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DDD.Light.Realtor.Domain.Event.Realtor;
-using DDD.Light.CQRS;
+using CQRS.Light.Core;
 
 namespace DDD.Light.Realtor.Domain.Model.Realtor
 {

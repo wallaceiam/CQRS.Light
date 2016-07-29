@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using DDD.Light.CQRS;
+using CQRS.Light.Core;
 using DDD.Light.Realtor.Domain.Event.Offer;
 
 namespace DDD.Light.Realtor.Domain.Model.Prospect

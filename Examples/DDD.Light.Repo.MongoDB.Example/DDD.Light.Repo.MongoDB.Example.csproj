@@ -88,17 +88,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\DDD.Light.Contracts\DDD.Light.Contracts.csproj">
+    <ProjectReference Include="..\..\DDD.Light.Contracts\CQRS.Light.Contracts.csproj">
       <Project>{a84ee5c7-916c-41d3-8bda-ab9b252c09b6}</Project>
-      <Name>DDD.Light.Contracts</Name>
+      <Name>CQRS.Light.Contracts</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\DDD.Light.Repository.InMemory\DDD.Light.Repository.InMemory.csproj">
+    <ProjectReference Include="..\..\DDD.Light.Repository.InMemory\CQRS.Light.Repository.InMemory.csproj">
       <Project>{0d146339-2755-4610-bd55-5c2fedfa02a5}</Project>
-      <Name>DDD.Light.Repository.InMemory</Name>
+      <Name>CQRS.Light.Repository.InMemory</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\DDD.Light.Repository.MongoDB\DDD.Light.Repository.MongoDB.csproj">
+    <ProjectReference Include="..\..\DDD.Light.Repository.MongoDB\CQRS.Light.Repository.MongoDB.csproj">
       <Project>{ad1f872f-e8c6-41c7-a7f0-21ccb3ae1ec1}</Project>
-      <Name>DDD.Light.Repository.MongoDB</Name>
+      <Name>CQRS.Light.Repository.MongoDB</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

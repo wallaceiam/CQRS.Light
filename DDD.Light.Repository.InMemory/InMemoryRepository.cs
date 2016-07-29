@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DDD.Light.Contracts.Repo;
+using CQRS.Light.Contracts;
 using System.Threading.Tasks;
 
-namespace DDD.Light.Repository.InMemory
+namespace CQRS.Light.Repository.InMemory
 {
     public class InMemoryRepository<TAggregate> : IRepository<TAggregate> where TAggregate : IEntity
     {

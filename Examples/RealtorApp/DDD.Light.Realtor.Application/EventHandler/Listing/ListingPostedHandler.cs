@@ -1,9 +1,8 @@
-﻿using DDD.Light.Contracts.EventStore;
+﻿using CQRS.Light.Contracts;
 using DDD.Light.Realtor.API.Query.Model;
 using DDD.Light.Realtor.Domain.Event.Listing;
 using DDD.Light.Realtor.Domain.Event.Realtor;
-using DDD.Light.Contracts.Repo;
-using DDD.Light.CQRS;
+using CQRS.Light.Core;
 using System.Threading.Tasks;
 
 namespace DDD.Light.Realtor.Application.EventHandler.Listing

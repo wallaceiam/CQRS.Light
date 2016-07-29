@@ -1,5 +1,5 @@
 ﻿using System;
-using DDD.Light.Contracts.CQRS;
+using CQRS.Light.Contracts;
 using System.Threading.Tasks;
 
 namespace DDD.Light.Messaging.Example

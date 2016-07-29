@@ -62,9 +62,9 @@
     <Compile Include="Query\Model\Entity.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\DDD.Light.Contracts\DDD.Light.Contracts.csproj">
+    <ProjectReference Include="..\..\..\DDD.Light.Contracts\CQRS.Light.Contracts.csproj">
       <Project>{a84ee5c7-916c-41d3-8bda-ab9b252c09b6}</Project>
-      <Name>DDD.Light.Contracts</Name>
+      <Name>CQRS.Light.Contracts</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using DDD.Light.Contracts.AggregateBus;
-using DDD.Light.Contracts.AggregateCache;
-using DDD.Light.Contracts.CQRS;
+using CQRS.Light.Contracts;
 using System.Threading.Tasks;
 
-namespace DDD.Light.Core
+namespace CQRS.Light.Core
 {
     public class AggregateBus : IAggregateBus
     {

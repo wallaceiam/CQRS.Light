@@ -1,7 +1,6 @@
 ﻿using System;
-using DDD.Light.Contracts.CQRS;
 
-namespace DDD.Light.Contracts.AggregateCache
+namespace CQRS.Light.Contracts
 {
     public interface IAggregateRepository<TAggregate> where TAggregate : IAggregateRoot
     {

@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using AttributeRouting.Web.Http;
-using DDD.Light.Contracts.CQRS;
+using CQRS.Light.Contracts;
 using DDD.Light.Realtor.API.Command.Realtor;
 using DDD.Light.Realtor.API.Query.Contract;
 using DDD.Light.Realtor.REST.API.Resources;

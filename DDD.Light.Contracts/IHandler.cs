@@ -1,4 +1,4 @@
-﻿namespace DDD.Light.Contracts.CQRS
+﻿namespace CQRS.Light.Contracts
 {
     public interface IHandler
     {

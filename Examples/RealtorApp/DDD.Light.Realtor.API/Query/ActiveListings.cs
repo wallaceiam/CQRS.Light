@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DDD.Light.Realtor.API.Query.Contract;
 using DDD.Light.Realtor.API.Query.Model;
-using DDD.Light.Contracts.Repo;
+using CQRS.Light.Contracts;
 using System.Threading.Tasks;
 
 namespace DDD.Light.Realtor.API.Query

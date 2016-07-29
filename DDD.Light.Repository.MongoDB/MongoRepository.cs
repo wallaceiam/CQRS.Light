@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DDD.Light.Contracts.Repo;
+using CQRS.Light.Contracts;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Threading.Tasks;
 
-namespace DDD.Light.Repository.MongoDB
+namespace CQRS.Light.Repository.MongoDB
 {
     public class MongoRepository<TAggregate> : IRepository<TAggregate>
         where TAggregate : IEntity

@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FluentAssertions;
-using DDD.Light.Contracts.CQRS;
-using DDD.Light.Contracts.AggregateCache;
+using CQRS.Light.Contracts;
+using CQRS.Light.Core;
 using System.Threading.Tasks;
 using System.Linq;
 

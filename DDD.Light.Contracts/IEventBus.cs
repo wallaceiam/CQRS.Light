@@ -1,8 +1,7 @@
 ﻿using System;
-using DDD.Light.Contracts.EventStore;
 using System.Threading.Tasks;
 
-namespace DDD.Light.Contracts.CQRS
+namespace CQRS.Light.Contracts
 {
     public interface IEventBus
     {
