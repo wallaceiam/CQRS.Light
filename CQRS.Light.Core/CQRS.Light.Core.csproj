@@ -75,7 +75,7 @@
     <Compile Include="Transaction.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="DDD.Light.Core.nuspec" />
+    <None Include="CQRS.Light.Core.nuspec" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

@@ -76,7 +76,7 @@
     <Compile Include="MongoRepository.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="DDD.Light.Repository.MongoDB.nuspec">
+    <None Include="CQRS.Light.Repository.MongoDB.nuspec">
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />

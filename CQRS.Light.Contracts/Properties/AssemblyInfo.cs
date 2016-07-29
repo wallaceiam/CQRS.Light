@@ -5,10 +5,10 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("DDD.Light.Contracts")]
+[assembly: AssemblyTitle("CQRS.Light.Contracts")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyProduct("DDD.Light.Contracts")]
+[assembly: AssemblyProduct("CQRS.Light.Contracts")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -1,4 +1,4 @@
-# DDD.Light 1.1.0.0
+# CQRS.Light 1.1.0.0
 
 Forked from the excellent aksharp/DDD.Light
 
@@ -8,10 +8,10 @@ This is still very much work in progress.  If you do encounter any bugs please c
 
 ##To install run these commands from NuGet Package Manager
 
-* PM> Install-Package DDD.Light.Contracts
-* PM> Install-Package DDD.Light.Core
+* PM> Install-Package CQRS.Light.Contracts
+* PM> Install-Package CQRS.Light.Core
 
-* PM> Install-Package DDD.Light.Repository.InMemory
+* PM> Install-Package CQRS.Light.Repository.InMemory
 ###OR
-* PM> Install-Package DDD.Light.Repository.MongoDB
+* PM> Install-Package CQRS.Light.Repository.MongoDB
 
