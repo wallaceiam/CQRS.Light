@@ -84,6 +84,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AggregateCacheClearedTests.cs" />
     <Compile Include="AggregateCacheTests.cs" />
+    <Compile Include="TestClasses.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -96,6 +97,10 @@
     <ProjectReference Include="..\CQRS.Light.Core\CQRS.Light.Core.csproj">
       <Project>{82915045-7657-4840-bf45-4c72d9cc435c}</Project>
       <Name>CQRS.Light.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CQRS.Light.Repository.InMemory\CQRS.Light.Repository.InMemory.csproj">
+      <Project>{0d146339-2755-4610-bd55-5c2fedfa02a5}</Project>
+      <Name>CQRS.Light.Repository.InMemory</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

@@ -18,7 +18,7 @@ namespace DDD.Light.Core.Tests
         }
 
         [TestMethod]
-        public void ShouldBeOnlyOneInstanceOfAnAggregateBus()
+        public void AggregateBus_ShouldBeOnlyOneInstance()
         {
             var instanceA = AggregateBus.Instance;
             var instanceB = AggregateBus.Instance;
@@ -27,7 +27,7 @@ namespace DDD.Light.Core.Tests
         }
 
         [TestMethod]
-        public void AggregateBusShouldSubscribe()
+        public void AggregateBus_ShouldSubscribeWhenConfigured()
         {
             var eventBus = new Moq.Mock<IEventBus>();
             eventBus.Setup(e => e.Subscribe<AggregateCacheCleared>(Moq.It.IsAny<Func<AggregateCacheCleared, Task>>())).Verifiable();
@@ -43,13 +43,13 @@ namespace DDD.Light.Core.Tests
         }
 
         [TestMethod]
-        public void RegisteredAggregateCachesShouldBeEmptyIfConfigureHasntBeenCalled()
+        public void AggregateBus_RegisteredAggregateCachesShouldBeEmptyIfConfigureHasntBeenCalled()
         {
             AggregateBus.Instance.RegisteredAggregateCaches.Count.Should().Be(0);
         }
 
         [TestMethod]
-        public void RegisteredAggregateCachesShouldContainAtLeastTheConfiguredValue()
+        public void AggregateBus_RegisteredAggregateCachesShouldContainAtLeastTheConfiguredValue()
         {
             var eventBus = new Moq.Mock<IEventBus>();
             eventBus.Setup(e => e.Subscribe<AggregateCacheCleared>(Moq.It.IsAny<Func<AggregateCacheCleared, Task>>())).Verifiable();
@@ -61,7 +61,7 @@ namespace DDD.Light.Core.Tests
         }
 
         [TestMethod]
-        public void CallingPublishWithoutConfigurationShouldRaiseException()
+        public void AggregateBus_CallingPublishWithoutConfigurationShouldRaiseException()
         {
             var @event = new TestEvent();
 
@@ -73,7 +73,7 @@ namespace DDD.Light.Core.Tests
 
 
         [TestMethod]
-        public void PublishWillPassToTheEventBus()
+        public void AggregateBus_PublishWillPassToTheEventBus()
         {
             var guid = Guid.NewGuid();
             var @event = new TestEvent();
@@ -88,34 +88,5 @@ namespace DDD.Light.Core.Tests
             eventBus.Verify(m => m.PublishAsync<TestAggregate, TestEvent>(guid, @event), Moq.Times.Once);
         }
 
-        protected class TestAggregate : IAggregateRoot
-        {
-            public Guid Id
-            {
-                get
-                {
-                    throw new NotImplementedException();
-                }
-
-                set
-                {
-                    throw new NotImplementedException();
-                }
-            }
-
-            public Task PublishAndApplyEventAsync<TEvent>(TEvent @event)
-            {
-                throw new NotImplementedException();
-            }
-
-            public Task PublishAndApplyEventAsync<TAggregate, TEvent>(TEvent @event) where TAggregate : IAggregateRoot
-            {
-                throw new NotImplementedException();
-            }
-        }
-        protected class TestEvent
-        {
-
-        }
     }
 }

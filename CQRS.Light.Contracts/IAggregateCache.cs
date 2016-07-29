@@ -8,8 +8,10 @@ namespace CQRS.Light.Contracts
     {
         void Configure(IEventStore eventStore, Func<Type, object> getAggregateCacheRepositoryInstance);
         void Reset();
+
+        IEventStore EventStore { get; }
         Task<TAggregate> GetByIdAsync<TAggregate>(Guid id) where TAggregate : IAggregateRoot;
         Task HandleAsync<TAggregate, TEvent>(Guid aggregateId, TEvent @event) where TAggregate : IAggregateRoot;
-        Task ClearAsync(Guid aggregateId, Type aggregateType);
+        Task ClearAsync<TAggregate>(Guid aggregateId) where TAggregate : IAggregateRoot;
     }
 }

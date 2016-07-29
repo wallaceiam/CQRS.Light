@@ -9,7 +9,7 @@ namespace DDD.Light.Core.Tests
     public class AggregateCacheClearedTests
     {
         [TestMethod]
-        public void AggregateCacheClearedConstructorAssignsValues()
+        public void AggregateCacheCleared_ConstructorAssignsValues()
         {
             var aggregateCache = new AggregateCacheCleared(
                 "myserializedid",
@@ -22,7 +22,7 @@ namespace DDD.Light.Core.Tests
         }
 
         [TestMethod]
-        public void AggregateCacheClearedConstructorDoesntLikeNulls()
+        public void AggregateCacheCleared_ConstructorDoesntLikeNulls()
         {
             // Arrange
             Action a = () => new AggregateCacheCleared(

@@ -32,6 +32,9 @@ namespace CQRS.Light.Core
         private Func<Type, object> _getAggregateCacheRepositoryInstance;
         public void Configure(IEventStore eventStore, Func<Type, object> getAggregateCacheRepositoryInstance)
         {
+            if (eventStore == null) throw new ArgumentNullException("eventStore");
+            if (getAggregateCacheRepositoryInstance == null) throw new ArgumentNullException("getAggregateCacheRepositoryInstance");
+
             _eventStore = eventStore;
             _getAggregateCacheRepositoryInstance = getAggregateCacheRepositoryInstance;
         }
@@ -42,18 +45,35 @@ namespace CQRS.Light.Core
             _getAggregateCacheRepositoryInstance = null; 
         }
 
-        private IRepository<TAggregate> GetRepository<TAggregate>()
+        public IEventStore EventStore { get { return _eventStore; } }
+
+        private IRepository<TAggregate> GetRepository<TAggregate>() where TAggregate : IAggregateRoot
         {
-            return _getAggregateCacheRepositoryInstance(typeof(IRepository<TAggregate>)) as IRepository<TAggregate>;
+            var repo =  _getAggregateCacheRepositoryInstance(typeof(IRepository<TAggregate>)) as IRepository<TAggregate>;
+            if (repo == null)
+                throw new InvalidOperationException(string.Format("No repository found for {0}", typeof(TAggregate)));
+            return repo;
         }
 
-        private IRepository<TAggregate> GetRepository<TAggregate>(TAggregate type)
+        //private IRepository<TAggregate> GetRepository<TAggregate>(TAggregate type)
+        //{
+        //    var result = _getAggregateCacheRepositoryInstance(typeof(IRepository<TAggregate>));
+        //    var repo = result as IRepository<TAggregate>;
+        //    if (repo == null)
+        //        throw new InvalidOperationException(string.Format("No repository found for {0}", typeof(TAggregate)));
+        //    return repo;
+
+        //}
+
+        private void VerifyIsConfigure()
         {
-            return _getAggregateCacheRepositoryInstance(typeof(IRepository<TAggregate>)) as IRepository<TAggregate>;
+            if (_eventStore == null) throw new InvalidOperationException("AggregateCache.Instance.Configured must be called before it can be used.");
+            if (_getAggregateCacheRepositoryInstance == null) throw new InvalidOperationException("AggregateCache.Instance.Configured must be called before it can be used.");
         }
 
         public async Task<TAggregate> GetByIdAsync<TAggregate>(Guid id) where TAggregate : IAggregateRoot
         {
+            VerifyIsConfigure();
             var cachedAggregate = await GetRepository<TAggregate>().GetByIdAsync(id);
             if (Equals(cachedAggregate, default(TAggregate)))
             {
@@ -66,6 +86,7 @@ namespace CQRS.Light.Core
 
         public async Task HandleAsync<TAggregate, TEvent>(Guid aggregateId, TEvent @event) where TAggregate : IAggregateRoot
         {
+            VerifyIsConfigure();
             var aggregate = await GetRepository<TAggregate>().GetByIdAsync(aggregateId);
             if (Equals(aggregate, default(TAggregate)))
                 aggregate = await _eventStore.GetByIdAsync<TAggregate>(aggregateId);
@@ -73,9 +94,11 @@ namespace CQRS.Light.Core
                 ApplyEvent<TAggregate, TEvent>(@event, aggregate);
         }
 
-        public async Task ClearAsync(Guid aggregateId, Type aggregateType)
+        public async Task ClearAsync<TAggregate>(Guid aggregateId) where TAggregate : IAggregateRoot
         {
-            var aggregateRepo = GetRepository(aggregateType);
+            VerifyIsConfigure();
+
+            var aggregateRepo = GetRepository<TAggregate>();
             await aggregateRepo.DeleteAsync(aggregateId);
         }
 
@@ -83,6 +106,10 @@ namespace CQRS.Light.Core
         {
             var eventType = typeof (TEvent);
             var method = typeof (TAggregate).GetMethod("ApplyEvent", BindingFlags.NonPublic | BindingFlags.Instance, null, new[] {eventType}, null);
+            if (method == null)
+                throw new InvalidOperationException(string.Format("{0} does not contain a non-public method ApplyEvent accepting parameter type {1}",
+                    typeof(TAggregate).ToString(),
+                    eventType));
             method.Invoke(aggregate, new[] {@event as Object});
         }
     }

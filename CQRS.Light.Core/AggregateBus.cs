@@ -38,7 +38,19 @@ namespace CQRS.Light.Core
             _eventBus = eventBus;
             _registeredAggregateCaches.Add(aggregateCache);
 
-            eventBus.Subscribe((AggregateCacheCleared e) => aggregateCache.ClearAsync(Guid.Parse(e.SerializedAggregateId), e.AggregateType));
+            eventBus.Subscribe((AggregateCacheCleared e) => AggregateCacheClearAsync(e));
+        }
+
+        private async Task AggregateCacheClearAsync(AggregateCacheCleared e)
+        {
+            foreach(var aggregateCache in _registeredAggregateCaches)
+            {
+                var mi = aggregateCache.GetType().GetMethod("ClearAsync", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+                mi = mi.MakeGenericMethod(e.AggregateType);
+                Task result = (Task)mi.Invoke(aggregateCache, null);
+                await result;
+            }
+            //return _registeredAggregateCaches.ForEach(x => await x.ClearAsync(Guid.Parse(e.SerializedAggregateId), e.AggregateType);
         }
 
         public void Reset()
