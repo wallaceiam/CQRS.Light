@@ -8,9 +8,10 @@ namespace CQRS.Light.Core
 {
     public class Transaction<T>
     {
-        public Transaction(){}
+        private Transaction(){}
 
         public Transaction(T message, IEnumerable<Func<T, Task>> handlers)
+            :this()
         {
             Message = message;
             Id = Guid.NewGuid();
@@ -27,11 +28,12 @@ namespace CQRS.Light.Core
         {
             while (NotProcessedActions.Count > 0)
             {
-                var handler = NotProcessedActions.Dequeue();
+                var handler = NotProcessedActions.Peek();
                 try
                 {
                     await handler.Invoke(Message);
                     ProcessedActions.Add(handler);
+                    NotProcessedActions.Dequeue(); //Remove it if everything is fine
                 }
                 catch (Exception ex)
                 {

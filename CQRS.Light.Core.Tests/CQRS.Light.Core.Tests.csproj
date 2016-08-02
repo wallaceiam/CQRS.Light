@@ -85,6 +85,9 @@
     <Compile Include="AggregateCacheClearedTests.cs" />
     <Compile Include="AggregateCacheTests.cs" />
     <Compile Include="TestClasses.cs" />
+    <Compile Include="CommandHandlerTests.cs" />
+    <Compile Include="TransactionTests.cs" />
+    <Compile Include="JsonEventSerializationStrategyTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

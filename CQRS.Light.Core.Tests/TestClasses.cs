@@ -1,4 +1,5 @@
 ﻿using CQRS.Light.Contracts;
+using CQRS.Light.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,5 +59,25 @@ namespace DDD.Light.Core.Tests
     public class TestEvent
     {
 
+    }
+
+    public class TestCommand
+    {
+
+    }
+
+    public class TestCommandHandler : CommandHandler<TestCommand>
+    {
+        public TestCommandHandler(ICommandBus commandBus)
+            :base(commandBus)
+        {
+
+        }
+        public bool WasHandleAsyncCalled { get; protected set; }
+        public override Task HandleAsync(TestCommand command)
+        {
+            this.WasHandleAsyncCalled = true;
+            return Task.FromResult<object>(null);
+        }
     }
 }

@@ -11,7 +11,8 @@ namespace DDD.Light.Realtor.Application.CommandHandler.Realtor
     {
         private readonly IEventStore _eventStore;
 
-        public PostListingHandler(IEventStore eventStore)
+        public PostListingHandler(ICommandBus commandBus, IEventStore eventStore)
+            :base(commandBus)
         {
             _eventStore = eventStore;
         }
