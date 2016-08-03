@@ -1,4 +1,5 @@
-﻿using CQRS.Light.Core;
+﻿using CQRS.Light.Contracts;
+using CQRS.Light.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,8 @@ namespace DDD.Light.Messaging.Example
         protected string name;
         protected string location;
 
-        protected Person(Guid id) : base(id)
+        protected Person(IAggregateBus aggregateBus, Guid id)
+            : base(aggregateBus, id)
         {
         }
 

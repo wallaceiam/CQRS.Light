@@ -57,7 +57,7 @@ namespace DDD.Light.EventStore.MongoDB.Example
             var name = Console.ReadLine();
 
             var id = Guid.NewGuid();
-            var person = new Person(id);
+            var person = new Person(AggregateBus.Instance, id);
             person.NameMe(name);
 
             var personDTO = await personReadModel.GetByIdAsync(id);
@@ -72,7 +72,7 @@ namespace DDD.Light.EventStore.MongoDB.Example
             var name = Console.ReadLine();
 
             var id = Guid.NewGuid();
-            var person = new Person(id);
+            var person = new Person(AggregateBus.Instance, id);
             person.NameMe(name);
 
             Console.Write("Enter person's Name: ");

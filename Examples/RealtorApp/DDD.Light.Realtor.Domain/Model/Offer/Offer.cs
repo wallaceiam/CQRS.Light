@@ -1,12 +1,18 @@
 ﻿using System;
 using CQRS.Light.Core;
 using DDD.Light.Realtor.Domain.Event.Offer;
+using CQRS.Light.Contracts;
 
 namespace DDD.Light.Realtor.Domain.Model.Offer
 {
     // aggregate root
     public class Offer : AggregateRoot
     {
+        public Offer(IAggregateBus aggregateBus)
+            :base(aggregateBus)
+        {
+
+        }
         public Guid BuyerId { get; set; }
         public Guid ProspectId { get; set; }
         public Guid ListingId { get; set; }

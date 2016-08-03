@@ -36,6 +36,15 @@ namespace DDD.Light.Core.Tests
         }
     }
 
+    public class TestAggregateRoot : AggregateRoot
+    {
+        public TestAggregateRoot(IAggregateBus aggregateBus, Guid guid)
+            : base(aggregateBus, guid)
+        {
+
+        }
+    }
+
     public class MissingApplyTestAggregate : IAggregateRoot
     {
 

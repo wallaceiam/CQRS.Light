@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using CQRS.Light.Core;
 using DDD.Light.Realtor.Domain.Event.Buyer;
+using CQRS.Light.Contracts;
 
 namespace DDD.Light.Realtor.Domain.Model.Buyer
 {
@@ -11,11 +12,13 @@ namespace DDD.Light.Realtor.Domain.Model.Buyer
         private List<Guid> _offerIds;
         private Guid _prospectId;
 
-        private Buyer()
+        private Buyer(IAggregateBus aggregateBus)
+            :base(aggregateBus)
         {
         }
 
-        public Buyer(Guid id, Guid prospectId) : base(id)
+        public Buyer(IAggregateBus aggregateBus, Guid id, Guid prospectId)
+            : base(aggregateBus, id)
         {
             _prospectId = prospectId;
             PublishAndApplyEventAsync(new ProspectPromotedToBuyer(id, prospectId)).ConfigureAwait(true);

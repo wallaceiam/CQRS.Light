@@ -1,5 +1,6 @@
 ﻿using System;
 using CQRS.Light.Core;
+using CQRS.Light.Contracts;
 
 namespace DDD.Light.EventStore.MongoDB.Example
 {
@@ -8,13 +9,14 @@ namespace DDD.Light.EventStore.MongoDB.Example
         private string _name;
 
         private Person()
+            :base(null)
         {
             
         }
 
-        public Person(Guid id)
+        public Person(IAggregateBus aggregateBus, Guid id)
+            :base(aggregateBus, id)
         {
-            Id = id;
             // cleanest way to call publish
             PublishAndApplyEventAsync(new PersonCreated(Id)).ConfigureAwait(true);
 //            EventBus.Instance.Publish(GetType(), Id, new PersonCreated(Id));

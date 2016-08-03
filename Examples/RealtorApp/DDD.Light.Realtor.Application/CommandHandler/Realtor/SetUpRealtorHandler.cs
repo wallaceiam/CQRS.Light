@@ -14,7 +14,7 @@ namespace DDD.Light.Realtor.Application.CommandHandler.Realtor
         }
         public override Task HandleAsync(SetUpRealtor command)
         {
-            new Domain.Model.Realtor.Realtor(command.RealtorId);
+            new Domain.Model.Realtor.Realtor(AggregateBus.Instance, command.RealtorId);
             return Task.FromResult<object>(null);
         }
     }

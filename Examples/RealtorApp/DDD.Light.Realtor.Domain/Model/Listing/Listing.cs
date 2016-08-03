@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using CQRS.Light.Core;
 using DDD.Light.Realtor.Domain.Event.Listing;
+using CQRS.Light.Contracts;
 
 namespace DDD.Light.Realtor.Domain.Model.Listing
 {
@@ -14,9 +15,13 @@ namespace DDD.Light.Realtor.Domain.Model.Listing
         private bool _posted;
         private IEnumerable<Guid> _offers;
 
-        private Listing(){}
+        private Listing()
+            :base(null)
+        {
+        }
 
-        public Listing(Guid id, Location location, Description description, decimal price) : base(id)
+        public Listing(IAggregateBus aggregateBus, Guid id, Location location, Description description, decimal price)
+            : base(aggregateBus, id)
         {
             _location = location;
             _description = description;

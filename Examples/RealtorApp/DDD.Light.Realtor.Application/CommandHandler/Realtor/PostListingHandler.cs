@@ -19,7 +19,7 @@ namespace DDD.Light.Realtor.Application.CommandHandler.Realtor
 
         public override async Task HandleAsync(PostListing command)
         {
-            var listing = new Listing(
+            var listing = new Listing(AggregateBus.Instance,
                 command.ListingId,
                 new Location(command.Street, command.City, command.State, command.Zip),
                 new Description(command.NumberOfBathrooms, command.NumberOfBedrooms, command.YearBuilt),                

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using CQRS.Light.Core;
 using DDD.Light.Realtor.Domain.Event.Offer;
+using CQRS.Light.Contracts;
 
 namespace DDD.Light.Realtor.Domain.Model.Prospect
 {
@@ -11,10 +12,12 @@ namespace DDD.Light.Realtor.Domain.Model.Prospect
         private List<Guid> _offerIds;
 
         private Prospect()
+            :base(null)
         {            
         }
 
-        public Prospect(Guid id) : base(id)
+        public Prospect(IAggregateBus aggregateBus, Guid id)
+            : base(aggregateBus, id)
         {
             
         }

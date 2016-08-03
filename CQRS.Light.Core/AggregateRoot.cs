@@ -8,19 +8,21 @@ namespace CQRS.Light.Core
 {
     public abstract class AggregateRoot : Entity, IAggregateRoot
     {
-        protected AggregateRoot()
+        private IAggregateBus _aggregateBus;
+        protected AggregateRoot(IAggregateBus aggregateBus)
         {
             
         }
 
-        protected AggregateRoot(Guid id)
+        protected AggregateRoot(IAggregateBus aggregateBus, Guid id)
+            :this(aggregateBus)
         {
             Id = id;
         }
 
         public async Task PublishAndApplyEventAsync<TAggregate, TEvent>(TEvent @event) where TAggregate : IAggregateRoot
         {
-            await AggregateBus.Instance.PublishAsync<TAggregate, TEvent>(Id, @event);
+            await _aggregateBus.PublishAsync<TAggregate, TEvent>(Id, @event);
             ApplyEventOnAggregate(@event);
         }
 

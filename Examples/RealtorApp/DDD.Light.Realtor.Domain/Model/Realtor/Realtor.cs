@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DDD.Light.Realtor.Domain.Event.Realtor;
 using CQRS.Light.Core;
+using CQRS.Light.Contracts;
 
 namespace DDD.Light.Realtor.Domain.Model.Realtor
 {
@@ -13,10 +14,12 @@ namespace DDD.Light.Realtor.Domain.Model.Realtor
         private List<Guid> _newListingIds; 
 
         private Realtor()
+            :base(null)
         {  
         }
 
-        public Realtor(Guid id) : base(id)
+        public Realtor(IAggregateBus aggregateBus, Guid id)
+            : base(aggregateBus, id)
         {
 //            Publish<Realtor, RealtorWasSetUp>(new RealtorWasSetUp(id));
             PublishAndApplyEventAsync(new RealtorWasSetUp(id)).ConfigureAwait(true);
