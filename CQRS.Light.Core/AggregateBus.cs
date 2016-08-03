@@ -68,7 +68,7 @@ namespace CQRS.Light.Core
         public async Task PublishAsync<TAggregate, TEvent>(Guid aggregateId, TEvent @event) where TAggregate : IAggregateRoot
         {
             if (_eventBus == null) throw new ApplicationException("AggregateBus -> Publish failed. EventBus is not configured");
-            await _eventBus.PublishAsync<TAggregate, TEvent>(aggregateId, @event).ConfigureAwait(true);
+            await _eventBus.PublishAsync<TAggregate, TEvent>(aggregateId, @event);
             await Task.WhenAll(_registeredAggregateCaches.Select(aggregateCache => aggregateCache.HandleAsync<TAggregate, TEvent>(aggregateId, @event)));
         }
 

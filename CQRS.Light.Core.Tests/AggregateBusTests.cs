@@ -78,14 +78,18 @@ namespace DDD.Light.Core.Tests
             var guid = Guid.NewGuid();
             var @event = new TestEvent();
             var eventBus = new Moq.Mock<IEventBus>();
-            eventBus.Setup(m => m.PublishAsync<TestAggregate, TestEvent>(guid, @event)).Verifiable();
+            eventBus.Setup(m => m.PublishAsync<TestAggregate, TestEvent>(guid, @event))
+                .Returns(Task.FromResult<object>(null)).Verifiable();
             var aggregateCache = new Moq.Mock<IAggregateCache>();
+            aggregateCache.Setup(x => x.HandleAsync<TestAggregate, TestEvent>(guid, @event))
+                .Returns(Task.FromResult<object>(null)).Verifiable();
 
             AggregateBus.Instance.Configure(eventBus.Object, aggregateCache.Object);
             AggregateBus.Instance.Awaiting(m => m.PublishAsync<TestAggregate, TestEvent>(guid, @event))
-                .ShouldNotThrow<ApplicationException>();
+                .ShouldNotThrow();
 
             eventBus.Verify(m => m.PublishAsync<TestAggregate, TestEvent>(guid, @event), Moq.Times.Once);
+            aggregateCache.Verify(m => m.HandleAsync<TestAggregate, TestEvent>(guid, @event), Moq.Times.Once);
         }
 
     }
