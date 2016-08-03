@@ -9,7 +9,8 @@ namespace DDD.Light.Realtor.Application.EventHandler.Listing
     {
         private readonly IEventStore _eventStore;
 
-        public RealtorPostedListingHandler(IEventStore eventStore)
+        public RealtorPostedListingHandler(IEventBus eventBus, IEventStore eventStore)
+            :base(eventBus)
         {
             _eventStore = eventStore;
         }

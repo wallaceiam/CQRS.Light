@@ -41,6 +41,18 @@ namespace DDD.Light.Core.Tests
         public TestAggregateRoot(IAggregateBus aggregateBus, Guid guid)
             : base(aggregateBus, guid)
         {
+            this.WasApplyEventCalled = false;
+        }
+
+        public bool WasApplyEventCalled { get; protected set; }
+
+        private void ApplyEvent(TestEvent @event)
+        {
+            this.WasApplyEventCalled = true;
+        }
+
+        private void ApplyEventDoesNotApply(TestEvent2 @event)
+        {
 
         }
     }
@@ -70,6 +82,11 @@ namespace DDD.Light.Core.Tests
 
     }
 
+    public class TestEvent2
+    {
+
+    }
+
     public class TestCommand
     {
 
@@ -87,6 +104,20 @@ namespace DDD.Light.Core.Tests
         {
             this.WasHandleAsyncCalled = true;
             return Task.FromResult<object>(null);
+        }
+    }
+
+    public class TestEventHandler : CQRS.Light.Core.EventHandler<TestEvent>
+    {
+        public TestEventHandler(IEventBus eventBus)
+            : base(eventBus)
+        {
+
+        }
+
+        public override Task HandleAsync(TestEvent @event)
+        {
+            throw new NotImplementedException();
         }
     }
 }

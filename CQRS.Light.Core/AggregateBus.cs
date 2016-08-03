@@ -34,12 +34,21 @@ namespace CQRS.Light.Core
             get { return _registeredAggregateCaches; }
         }
 
+        public void Configure(IEventBus eventBus)
+        {
+            this.Configure(eventBus, null);
+        }
+
         public void Configure(IEventBus eventBus, IAggregateCache aggregateCache)
         {
             _eventBus = eventBus;
-            _registeredAggregateCaches.Add(aggregateCache);
 
-            eventBus.Subscribe((AggregateCacheCleared e) => AggregateCacheClearAsync(e));
+            if (aggregateCache != null)
+            {
+                _registeredAggregateCaches.Add(aggregateCache);
+
+                eventBus.Subscribe((AggregateCacheCleared e) => AggregateCacheClearAsync(e));
+            }
         }
 
         private async Task AggregateCacheClearAsync(AggregateCacheCleared e)
@@ -69,7 +78,8 @@ namespace CQRS.Light.Core
         {
             if (_eventBus == null) throw new ApplicationException("AggregateBus -> Publish failed. EventBus is not configured");
             await _eventBus.PublishAsync<TAggregate, TEvent>(aggregateId, @event);
-            await Task.WhenAll(_registeredAggregateCaches.Select(aggregateCache => aggregateCache.HandleAsync<TAggregate, TEvent>(aggregateId, @event)));
+            if(_registeredAggregateCaches.Any())
+                await Task.WhenAll(_registeredAggregateCaches.Select(aggregateCache => aggregateCache.HandleAsync<TAggregate, TEvent>(aggregateId, @event)));
         }
 
     }

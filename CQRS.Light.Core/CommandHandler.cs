@@ -9,7 +9,7 @@ namespace CQRS.Light.Core
         public CommandHandler(ICommandBus commandBus)
             :this()
         {
-            this._commandBus = commandBus;
+            _commandBus = commandBus;
         }
 
         private CommandHandler()
@@ -20,7 +20,7 @@ namespace CQRS.Light.Core
         public abstract Task HandleAsync(T command);
         public void Subscribe()
         {
-            this._commandBus.Subscribe(this);
+            _commandBus.Subscribe(this);
         }
     }
 }

@@ -18,6 +18,7 @@ namespace CQRS.Light.Core
             :this(aggregateBus)
         {
             Id = id;
+            _aggregateBus = aggregateBus;
         }
 
         public async Task PublishAndApplyEventAsync<TAggregate, TEvent>(TEvent @event) where TAggregate : IAggregateRoot
@@ -38,12 +39,12 @@ namespace CQRS.Light.Core
             {
                 var publishMethod = typeof (AggregateBus).GetMethod("PublishAsync");
                 var genericPublishMethod = publishMethod.MakeGenericMethod(new[] {GetType(), typeof (TEvent)});
-                var result = (Task)genericPublishMethod.Invoke(AggregateBus.Instance, new[] {Id, @event as Object});
+                var result = genericPublishMethod.Invoke(_aggregateBus, new[] { Id, @event as Object }) as Task;
                 await result;
             }
             catch (Exception ex)
             {
-                throw new ApplicationException(string.Format("DDD.Light.Core.AggregateRoot -> PublishOnAggregateBusThroughReflection: Failed to get and invoke Publish method on AggregateBus.Instance. Event type {0} did not get published", typeof(TEvent)), ex);
+                throw new ApplicationException(string.Format("CQRS.Light.Core.AggregateRoot -> ApplyEventOnAggregate: Failed to apply event on aggregate type: {0} through reflection. Event type {1} did not get applied.  Are you missing a private ApplyEvent({1} @event) on {0}?", GetType(), typeof(TEvent)), ex);
             }
         }
 
@@ -56,7 +57,7 @@ namespace CQRS.Light.Core
             }
             catch (Exception ex)
             {
-                throw new ApplicationException(string.Format("DDD.Light.Core.InProcess.AggregateRoot -> ApplyEventOnAggregate: Failed to apply event on aggregate type: {0} through reflection. Event type {1} did not get applied", GetType(), typeof(TEvent)), ex);
+                throw new ApplicationException(string.Format("CQRS.Light.Core.AggregateRoot -> ApplyEventOnAggregate: Failed to apply event on aggregate type: {0} through reflection. Event type {1} did not get applied.  Are you missing a private ApplyEvent({1} @event) on {0}?", GetType(), typeof(TEvent)), ex);
             }
         }
     }

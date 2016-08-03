@@ -11,7 +11,8 @@ namespace DDD.Light.Realtor.Application.EventHandler.Listing
     {
         private readonly IRepository<API.Query.Model.Listing> _activeListings;
 
-        public ListingPostedHandler(IRepository<API.Query.Model.Listing> activeListings)
+        public ListingPostedHandler(IEventBus eventBus, IRepository<API.Query.Model.Listing> activeListings)
+            :base(eventBus)
         {
             _activeListings = activeListings;
         }

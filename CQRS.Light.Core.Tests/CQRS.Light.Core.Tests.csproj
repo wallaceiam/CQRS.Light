@@ -89,6 +89,7 @@
     <Compile Include="TransactionTests.cs" />
     <Compile Include="JsonEventSerializationStrategyTests.cs" />
     <Compile Include="AggregateRootTests.cs" />
+    <Compile Include="EventHandlerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
