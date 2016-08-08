@@ -13,5 +13,6 @@ namespace CQRS.Light.Contracts
         Task RestoreReadModelAync();
         Task RestoreReadModelAync(DateTime until);
         IEventStore GetEventStore();
+        void Reset();
     }
 }

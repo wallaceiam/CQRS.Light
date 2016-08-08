@@ -30,18 +30,12 @@ namespace CQRS.Light.Core
         private EventHandlersDatabase()
         {
             _registeredHandlerActions = new List<Func<T, Task>>();
-            _instanceID = Guid.NewGuid();
         }
 
-        private readonly Guid _instanceID;
-        public Guid GetUniqueInstanceID()
-        {
-            return _instanceID;
-        }
 
         public void Add(IEventHandler<T> eventHandler)
         {
-            _registeredHandlerActions.Add(eventHandler.HandleAsync);
+            Add(eventHandler.HandleAsync);
         }
 
         public void Add(Func<T, Task> eventHandlerAction)
@@ -52,6 +46,11 @@ namespace CQRS.Light.Core
         public IEnumerable<Func<T,Task>> Get()
         {
             return _registeredHandlerActions;
+        }
+
+        public void Clear()
+        {
+            _registeredHandlerActions.Clear();
         }
 
     }

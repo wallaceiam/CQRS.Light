@@ -65,15 +65,15 @@ namespace CQRS.Light.Core
 
         //}
 
-        private void VerifyIsConfigure()
+        private void VerifyIsConfigured()
         {
-            if (_eventStore == null) throw new InvalidOperationException("AggregateCache.Instance.Configured must be called before it can be used.");
-            if (_getAggregateCacheRepositoryInstance == null) throw new InvalidOperationException("AggregateCache.Instance.Configured must be called before it can be used.");
+            if (_eventStore == null || _getAggregateCacheRepositoryInstance == null)
+                throw new InvalidOperationException("AggregateCache.Instance.Configure must be called before it can be used.");
         }
 
         public async Task<TAggregate> GetByIdAsync<TAggregate>(Guid id) where TAggregate : IAggregateRoot
         {
-            VerifyIsConfigure();
+            VerifyIsConfigured();
             var cachedAggregate = await GetRepository<TAggregate>().GetByIdAsync(id);
             if (Equals(cachedAggregate, default(TAggregate)))
             {
@@ -86,7 +86,7 @@ namespace CQRS.Light.Core
 
         public async Task HandleAsync<TAggregate, TEvent>(Guid aggregateId, TEvent @event) where TAggregate : IAggregateRoot
         {
-            VerifyIsConfigure();
+            VerifyIsConfigured();
             var aggregate = await GetRepository<TAggregate>().GetByIdAsync(aggregateId);
             if (Equals(aggregate, default(TAggregate)))
                 aggregate = await _eventStore.GetByIdAsync<TAggregate>(aggregateId);
@@ -96,7 +96,7 @@ namespace CQRS.Light.Core
 
         public async Task ClearAsync<TAggregate>(Guid aggregateId) where TAggregate : IAggregateRoot
         {
-            VerifyIsConfigure();
+            VerifyIsConfigured();
 
             var aggregateRepo = GetRepository<TAggregate>();
             await aggregateRepo.DeleteAsync(aggregateId);

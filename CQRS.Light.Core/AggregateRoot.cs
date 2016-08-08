@@ -11,7 +11,8 @@ namespace CQRS.Light.Core
         private IAggregateBus _aggregateBus;
         protected AggregateRoot(IAggregateBus aggregateBus)
         {
-            
+            if (aggregateBus == null) throw new ArgumentNullException("aggregateBus");
+            _aggregateBus = aggregateBus;
         }
 
         protected AggregateRoot(IAggregateBus aggregateBus, Guid id)

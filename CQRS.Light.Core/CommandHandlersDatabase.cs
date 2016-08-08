@@ -29,13 +29,12 @@ namespace CQRS.Light.Core
 
         private CommandHandlersDatabase()
         {
-            _registeredHandlerActions = //new List<Action<T>>();
-                new List<Func<T, Task>>();
+            _registeredHandlerActions = new List<Func<T, Task>>();
         }
 
         public void Add(ICommandHandler<T> commandHandler)
         {
-            _registeredHandlerActions.Add(commandHandler.HandleAsync);
+            Add(commandHandler.HandleAsync);
         }
 
         public void Add(Func<T, Task> commandHandlerAction)
@@ -46,6 +45,11 @@ namespace CQRS.Light.Core
         public IEnumerable<Func<T, Task>> Get()
         {
             return _registeredHandlerActions;
+        }
+
+        public void Clear()
+        {
+            _registeredHandlerActions.Clear();
         }
 
     }

@@ -30,7 +30,7 @@ namespace CQRS.Light.Core
             }
         }
 
-        private EventBus(){}
+        private EventBus() { }
 
         public void Subscribe<T>(IEventHandler<T> handler)
         {
@@ -57,52 +57,61 @@ namespace CQRS.Light.Core
         //todo: make reason behind checkLatestEventTimestampPriorToSavingToEventStore less ambiguious
         public void Configure(IEventStore eventStore, IEventSerializationStrategy eventSerializationStrategy, bool checkLatestEventTimestampPriorToSavingToEventStore)
         {
+            if (eventStore == null) throw new ArgumentNullException("eventStore");
+            if (eventSerializationStrategy == null) throw new ArgumentNullException("eventSerializationStrategy");
+
             _eventStore = eventStore;
             _eventSerializationStrategy = eventSerializationStrategy;
             _checkLatestEventTimestampPriorToSavingToEventStore = checkLatestEventTimestampPriorToSavingToEventStore;
         }
 
+        public void Reset()
+        {
+            _eventStore = null;
+            _eventSerializationStrategy = null;
+            _checkLatestEventTimestampPriorToSavingToEventStore = false;
+        }
+
+        private void VerifyIsConfigured()
+        {
+            if (_eventStore == null || _eventSerializationStrategy == null)
+                throw new InvalidOperationException("EventBus.Instance.Configure must be called before it can be used.");
+        }
+
         private async Task HandleEventAsync<T>(T @event)
         {
-            try
+            if (!Equals(@event, default(T)))
             {
-                if (!Equals(@event, default(T)))
-                {
-                    var transaction = new Transaction<T>(@event, EventHandlersDatabase<T>.Instance.Get().ToList());
-                    await transaction.CommitAsync();
-                }
-            }
-            catch (Exception)
-            {
-                throw new ApplicationException("Transaction<T>(@event, EventHandlersDatabase<T>.Instance.Get().ToList()).Commit() failed");
+                var transaction = new Transaction<T>(@event, EventHandlersDatabase<T>.Instance.Get().ToList());
+                await transaction.CommitAsync();
             }
         }
 
         private async Task StoreEventAsync<TEvent>(Type aggregateType, Guid aggregateId, TEvent @event)
         {
-            if (_eventStore == null) throw new ApplicationException("Event Store is not configured. Use 'EventBus.Instance.Configure(eventStore, eventSerializationStrategy);' to configure it.");
+            VerifyIsConfigured();
             try
             {
                 if (_checkLatestEventTimestampPriorToSavingToEventStore)
                 {
                     var latestCreatedOnInEventStore = await _eventStore.LatestEventTimestampAsync(aggregateId);
                     if (DateTime.Compare(DateTime.UtcNow, latestCreatedOnInEventStore) < 0)
-                        //earlier than in event store
+                    //earlier than in event store
                     {
                         var serializedAggregateId = _eventSerializationStrategy.SerializeEvent(aggregateId);
                         await PublishAsync(GetType(), aggregateId, new AggregateCacheCleared(serializedAggregateId, typeof(Guid), aggregateType));
                     }
                 }
                 await _eventStore.SaveAsync(new AggregateEvent
-                    {
-                        Id = Guid.NewGuid(),
-                        AggregateType = aggregateType.AssemblyQualifiedName,
-                        EventType = typeof (TEvent).AssemblyQualifiedName,
-                        CreatedOn = DateTime.UtcNow,
-                        SerializedEvent = _eventSerializationStrategy.SerializeEvent(@event),
-                        SerializedAggregateId = _eventSerializationStrategy.SerializeEvent(aggregateId),
-                        AggregateIdType = typeof(Guid).AssemblyQualifiedName
-                    });
+                {
+                    Id = Guid.NewGuid(),
+                    AggregateType = aggregateType.AssemblyQualifiedName,
+                    EventType = typeof(TEvent).AssemblyQualifiedName,
+                    CreatedOn = DateTime.UtcNow,
+                    SerializedEvent = _eventSerializationStrategy.SerializeEvent(@event),
+                    SerializedAggregateId = _eventSerializationStrategy.SerializeEvent(aggregateId),
+                    AggregateIdType = typeof(Guid).AssemblyQualifiedName
+                });
             }
             catch (Exception ex)
             {
@@ -131,7 +140,7 @@ namespace CQRS.Light.Core
             var @event = _eventSerializationStrategy.DeserializeEvent(aggregateEvent.SerializedEvent, eventType);
             var method = GetType().GetMethod("HandleEventAsync", BindingFlags.NonPublic | BindingFlags.Instance)
                      .MakeGenericMethod(eventType);
-            var result = (Task)method.Invoke(Instance, new[] {@event});
+            var result = (Task)method.Invoke(Instance, new[] { @event });
             await result;
         }
 

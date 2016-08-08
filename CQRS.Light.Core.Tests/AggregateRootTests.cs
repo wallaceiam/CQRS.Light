@@ -15,9 +15,21 @@ namespace DDD.Light.Core.Tests
         public void AggregateRoot_ConstructorShouldAssignValues()
         {
             var guid = Guid.NewGuid();
-            var testAggreageRoot = new TestAggregateRoot(null, guid);
+            var aggregateBus = new Mock<IAggregateBus>();
+            var testAggreageRoot = new TestAggregateRoot(aggregateBus.Object, guid);
 
             testAggreageRoot.Id.Should().Be(guid);
+        }
+
+        [TestMethod]
+        public void AggregateRoot_ConstructorShouldNotLikeNullAggregateBus()
+        {
+            var guid = Guid.NewGuid();
+            Action a = () => new TestAggregateRoot(null, guid);
+
+            a.ShouldThrow<ArgumentNullException>();
+
+            
         }
 
         [TestMethod]

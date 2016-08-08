@@ -9,6 +9,7 @@ namespace CQRS.Light.Contracts
         void Add(IEventHandler<T> eventHandler);
         void Add(Func<T, Task> handleMethod);
         IEnumerable<Func<T, Task>> Get();
+        void Clear();
     }
 
 }
