@@ -44,14 +44,21 @@ namespace CQRS.Light.Core
 
         public async Task PublishAsync<TEvent>(Type aggregateType, Guid aggregateId, TEvent @event)
         {
+            VerifyIsConfigured();
             await StoreEventAsync(aggregateType, aggregateId, @event);
             await HandleEventAsync(@event);
         }
 
         public async Task PublishAsync<TAggregate, T>(Guid aggregateId, T @event)
         {
+            VerifyIsConfigured();
             await StoreEventAsync(typeof(TAggregate), aggregateId, @event);
             await HandleEventAsync(@event);
+        }
+
+        public void Configure(IEventStore eventStore, IEventSerializationStrategy eventSerializationStrategy)
+        {
+            Configure(eventStore, eventSerializationStrategy, true);
         }
 
         //todo: make reason behind checkLatestEventTimestampPriorToSavingToEventStore less ambiguious
@@ -89,33 +96,35 @@ namespace CQRS.Light.Core
 
         private async Task StoreEventAsync<TEvent>(Type aggregateType, Guid aggregateId, TEvent @event)
         {
-            VerifyIsConfigured();
             try
             {
-                if (_checkLatestEventTimestampPriorToSavingToEventStore)
+                if (!(@event is AggregateCacheCleared)) //don't want to publish or persist these events
                 {
-                    var latestCreatedOnInEventStore = await _eventStore.LatestEventTimestampAsync(aggregateId);
-                    if (DateTime.Compare(DateTime.UtcNow, latestCreatedOnInEventStore) < 0)
-                    //earlier than in event store
+                    if (_checkLatestEventTimestampPriorToSavingToEventStore)
                     {
-                        var serializedAggregateId = _eventSerializationStrategy.SerializeEvent(aggregateId);
-                        await PublishAsync(GetType(), aggregateId, new AggregateCacheCleared(serializedAggregateId, typeof(Guid), aggregateType));
+                        var latestCreatedOnInEventStore = await _eventStore.LatestEventTimestampAsync(aggregateId);
+                        if (DateTime.Compare(DateTime.UtcNow, latestCreatedOnInEventStore) < 0)
+                        //earlier than in event store
+                        {
+                            var serializedAggregateId = _eventSerializationStrategy.SerializeEvent(aggregateId);
+                            await PublishAsync(GetType(), aggregateId, new AggregateCacheCleared(serializedAggregateId, typeof(Guid), aggregateType));
+                        }
                     }
+                    await _eventStore.SaveAsync(new AggregateEvent
+                    {
+                        Id = Guid.NewGuid(),
+                        AggregateType = aggregateType.AssemblyQualifiedName,
+                        EventType = typeof(TEvent).AssemblyQualifiedName,
+                        CreatedOn = DateTime.UtcNow,
+                        SerializedEvent = _eventSerializationStrategy.SerializeEvent(@event),
+                        SerializedAggregateId = _eventSerializationStrategy.SerializeEvent(aggregateId),
+                        AggregateIdType = typeof(Guid).AssemblyQualifiedName
+                    });
                 }
-                await _eventStore.SaveAsync(new AggregateEvent
-                {
-                    Id = Guid.NewGuid(),
-                    AggregateType = aggregateType.AssemblyQualifiedName,
-                    EventType = typeof(TEvent).AssemblyQualifiedName,
-                    CreatedOn = DateTime.UtcNow,
-                    SerializedEvent = _eventSerializationStrategy.SerializeEvent(@event),
-                    SerializedAggregateId = _eventSerializationStrategy.SerializeEvent(aggregateId),
-                    AggregateIdType = typeof(Guid).AssemblyQualifiedName
-                });
             }
             catch (Exception ex)
             {
-                throw new ApplicationException("DDD.Light.Core.InProcess.EventBus -> StoreEvent<T>: Saving to event store failed", ex);
+                throw new ApplicationException("CQRS.Light.Core.EventBus -> StoreEvent<T>: Saving to event store failed", ex);
             }
         }
 
@@ -126,12 +135,24 @@ namespace CQRS.Light.Core
 
         public async Task RestoreReadModelAync()
         {
-            (await _eventStore.GetAllAsync()).ToList().ForEach(async x => await HandleRestoreReadModelEventAsync(x));
+            VerifyIsConfigured();
+            var events = await _eventStore.GetAllAsync();
+            foreach (var @event in events)
+            {
+                await HandleRestoreReadModelEventAsync(@event);
+            }
+            //(await _eventStore.GetAllAsync()).ToList().ForEach(async x => await HandleRestoreReadModelEventAsync(x));
         }
 
         public async Task RestoreReadModelAync(DateTime until)
         {
-            (await _eventStore.GetAllAsync(until)).ToList().ForEach(async x => await HandleRestoreReadModelEventAsync(x));
+            VerifyIsConfigured();
+            var events = await _eventStore.GetAllAsync(until);
+            foreach(var @event in events)
+            {
+                await HandleRestoreReadModelEventAsync(@event);
+            }
+            //(await _eventStore.GetAllAsync(until)).ToList().ForEach(async x => await HandleRestoreReadModelEventAsync(x));
         }
 
         private async Task HandleRestoreReadModelEventAsync(AggregateEvent aggregateEvent)
