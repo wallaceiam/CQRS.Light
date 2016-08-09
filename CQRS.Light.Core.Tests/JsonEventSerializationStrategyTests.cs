@@ -6,24 +6,24 @@ using FluentAssertions;
 namespace DDD.Light.Core.Tests
 {
     [TestClass]
-    public class JsonEventSerializationStrategyTests
+    public class JsonSerializationStrategyTests
     {
         [TestMethod]
-        public void JsonEventSerializationStrategy_SerializeShouldReturnAValidString()
+        public void JsonSerializationStrategy_SerializeShouldReturnAValidString()
         {
-            var strategy = new JsonEventSerializationStrategy();
+            var strategy = new JsonSerializationStrategy();
 
-            var result = strategy.SerializeEvent(new SerializableClass() { Bool = true, Int = 123, String = "345" });
+            var result = strategy.Serialize(new SerializableClass() { Bool = true, Int = 123, String = "345" });
 
             result.Should().Be("{\"Bool\":true,\"Int\":123,\"String\":\"345\"}");
         }
 
         [TestMethod]
-        public void JsonEventSerializationStrategy_DeserializeShouldReturnAValidObject()
+        public void JsonSerializationStrategy_DeserializeShouldReturnAValidObject()
         {
-            var strategy = new JsonEventSerializationStrategy();
+            var strategy = new JsonSerializationStrategy();
 
-            var result = strategy.DeserializeEvent("{\"Bool\":true,\"Int\":123,\"String\":\"345\"}", typeof(SerializableClass));
+            var result = strategy.Deserialize("{\"Bool\":true,\"Int\":123,\"String\":\"345\"}", typeof(SerializableClass));
 
             result.Should().NotBeNull();
             result.Should().BeOfType(typeof(SerializableClass));

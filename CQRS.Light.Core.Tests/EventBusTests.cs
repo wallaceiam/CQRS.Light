@@ -87,7 +87,7 @@ namespace DDD.Light.Core.Tests
         public void EventBus_ConfigureShouldAssignValues()
         {
             var eventStore = new Mock<IEventStore>();
-            var eventSerializationStrat = new Mock<IEventSerializationStrategy>();
+            var eventSerializationStrat = new Mock<ISerializationStrategy>();
 
             EventBus.Instance.Configure(eventStore.Object, eventSerializationStrat.Object, true);
 
@@ -104,7 +104,7 @@ namespace DDD.Light.Core.Tests
         public void EventBus_ConfigureOverloadShouldAssignValues()
         {
             var eventStore = new Mock<IEventStore>();
-            var eventSerializationStrat = new Mock<IEventSerializationStrategy>();
+            var eventSerializationStrat = new Mock<ISerializationStrategy>();
 
             EventBus.Instance.Configure(eventStore.Object, eventSerializationStrat.Object);
 
@@ -133,15 +133,15 @@ namespace DDD.Light.Core.Tests
             var testEvent = new TestEvent();
             var eventStore = new Mock<IEventStore>();
             eventStore.Setup(x => x.SaveAsync(It.IsAny<AggregateEvent>())).Returns(Task.FromResult<object>(null)).Verifiable();
-            var eventSerializationStrategy = new Mock<IEventSerializationStrategy>();
-            eventSerializationStrategy.Setup(x => x.SerializeEvent(testEvent)).Returns("SerializedTestEvent").Verifiable();
+            var SerializationStrategy = new Mock<ISerializationStrategy>();
+            SerializationStrategy.Setup(x => x.Serialize(testEvent)).Returns("SerializedTestEvent").Verifiable();
 
-            EventBus.Instance.Configure(eventStore.Object, eventSerializationStrategy.Object, true);
+            EventBus.Instance.Configure(eventStore.Object, SerializationStrategy.Object, true);
 
             EventBus.Instance.Awaiting(x => x.PublishAsync<TestEvent>(typeof(TestAggregate), guid, testEvent)).ShouldNotThrow();
 
             eventStore.Verify(x => x.SaveAsync(It.IsAny<AggregateEvent>()), Times.Once);
-            eventSerializationStrategy.Verify(x => x.SerializeEvent(testEvent), Times.Once);
+            SerializationStrategy.Verify(x => x.Serialize(testEvent), Times.Once);
         }
 
         [TestMethod]
@@ -151,16 +151,16 @@ namespace DDD.Light.Core.Tests
             var testEvent = new TestEvent();
             var eventStore = new Mock<IEventStore>();
             eventStore.Setup(x => x.SaveAsync(It.IsAny<AggregateEvent>())).Throws(new Exception("Oops")).Verifiable();
-            var eventSerializationStrategy = new Mock<IEventSerializationStrategy>();
-            eventSerializationStrategy.Setup(x => x.SerializeEvent(testEvent)).Returns("SerializedTestEvent").Verifiable();
+            var SerializationStrategy = new Mock<ISerializationStrategy>();
+            SerializationStrategy.Setup(x => x.Serialize(testEvent)).Returns("SerializedTestEvent").Verifiable();
 
-            EventBus.Instance.Configure(eventStore.Object, eventSerializationStrategy.Object, true);
+            EventBus.Instance.Configure(eventStore.Object, SerializationStrategy.Object, true);
 
             EventBus.Instance.Awaiting(x => x.PublishAsync<TestEvent>(typeof(TestAggregate), guid, testEvent))
                 .ShouldThrow<ApplicationException>();
 
             eventStore.Verify(x => x.SaveAsync(It.IsAny<AggregateEvent>()), Times.Once);
-            eventSerializationStrategy.Verify(x => x.SerializeEvent(testEvent), Times.Once);
+            SerializationStrategy.Verify(x => x.Serialize(testEvent), Times.Once);
         }
 
         [TestMethod]
@@ -171,18 +171,18 @@ namespace DDD.Light.Core.Tests
             var eventStore = new Mock<IEventStore>();
             eventStore.Setup(x => x.SaveAsync(It.IsAny<AggregateEvent>())).Returns(Task.FromResult<object>(null)).Verifiable();
             eventStore.Setup(x => x.LatestEventTimestampAsync(guid)).Returns(Task.FromResult<DateTime>(DateTime.UtcNow.AddMinutes(1))).Verifiable();
-            var eventSerializationStrategy = new Mock<IEventSerializationStrategy>();
-            eventSerializationStrategy.Setup(x => x.SerializeEvent(testEvent)).Returns("SerializedTestEvent").Verifiable();
-            eventSerializationStrategy.Setup(x => x.SerializeEvent(guid)).Returns(guid.ToString()).Verifiable();
+            var SerializationStrategy = new Mock<ISerializationStrategy>();
+            SerializationStrategy.Setup(x => x.Serialize(testEvent)).Returns("SerializedTestEvent").Verifiable();
+            SerializationStrategy.Setup(x => x.Serialize(guid)).Returns(guid.ToString()).Verifiable();
 
-            EventBus.Instance.Configure(eventStore.Object, eventSerializationStrategy.Object, true);
+            EventBus.Instance.Configure(eventStore.Object, SerializationStrategy.Object, true);
 
             EventBus.Instance.Awaiting(x => x.PublishAsync<TestEvent>(typeof(TestAggregate), guid, testEvent)).ShouldNotThrow();
 
             eventStore.Verify(x => x.SaveAsync(It.IsAny<AggregateEvent>()), Times.Once);
             eventStore.Verify(x => x.LatestEventTimestampAsync(guid), Times.Once);
-            eventSerializationStrategy.Verify(x => x.SerializeEvent(testEvent), Times.Once);
-            eventSerializationStrategy.Verify(x => x.SerializeEvent(guid), Times.Exactly(2)); //once for the AggregateCacheClear and once for the Event
+            SerializationStrategy.Verify(x => x.Serialize(testEvent), Times.Once);
+            SerializationStrategy.Verify(x => x.Serialize(guid), Times.Exactly(2)); //once for the AggregateCacheClear and once for the Event
         }
 
         [TestMethod]
@@ -193,18 +193,18 @@ namespace DDD.Light.Core.Tests
             var eventStore = new Mock<IEventStore>();
             eventStore.Setup(x => x.SaveAsync(It.IsAny<AggregateEvent>())).Returns(Task.FromResult<object>(null)).Verifiable();
             eventStore.Setup(x => x.LatestEventTimestampAsync(guid)).Returns(Task.FromResult<DateTime>(DateTime.UtcNow.AddMinutes(1))).Verifiable();
-            var eventSerializationStrategy = new Mock<IEventSerializationStrategy>();
-            eventSerializationStrategy.Setup(x => x.SerializeEvent(testEvent)).Returns("SerializedTestEvent").Verifiable();
-            eventSerializationStrategy.Setup(x => x.SerializeEvent(guid)).Returns(guid.ToString()).Verifiable();
+            var SerializationStrategy = new Mock<ISerializationStrategy>();
+            SerializationStrategy.Setup(x => x.Serialize(testEvent)).Returns("SerializedTestEvent").Verifiable();
+            SerializationStrategy.Setup(x => x.Serialize(guid)).Returns(guid.ToString()).Verifiable();
 
-            EventBus.Instance.Configure(eventStore.Object, eventSerializationStrategy.Object, false);
+            EventBus.Instance.Configure(eventStore.Object, SerializationStrategy.Object, false);
 
             EventBus.Instance.Awaiting(x => x.PublishAsync<TestEvent>(typeof(TestAggregate), guid, testEvent)).ShouldNotThrow();
 
             eventStore.Verify(x => x.SaveAsync(It.IsAny<AggregateEvent>()), Times.Once);
             eventStore.Verify(x => x.LatestEventTimestampAsync(guid), Times.Exactly(0));
-            eventSerializationStrategy.Verify(x => x.SerializeEvent(testEvent), Times.Once);
-            eventSerializationStrategy.Verify(x => x.SerializeEvent(guid), Times.Exactly(1)); //once for the Event
+            SerializationStrategy.Verify(x => x.Serialize(testEvent), Times.Once);
+            SerializationStrategy.Verify(x => x.Serialize(guid), Times.Exactly(1)); //once for the Event
         }
 
         [TestMethod]
@@ -223,15 +223,15 @@ namespace DDD.Light.Core.Tests
             var testEvent = new TestEvent();
             var eventStore = new Mock<IEventStore>();
             eventStore.Setup(x => x.SaveAsync(It.IsAny<AggregateEvent>())).Returns(Task.FromResult<object>(null)).Verifiable();
-            var eventSerializationStrategy = new Mock<IEventSerializationStrategy>();
-            eventSerializationStrategy.Setup(x => x.SerializeEvent(testEvent)).Returns("SerializedTestEvent").Verifiable();
+            var SerializationStrategy = new Mock<ISerializationStrategy>();
+            SerializationStrategy.Setup(x => x.Serialize(testEvent)).Returns("SerializedTestEvent").Verifiable();
 
-            EventBus.Instance.Configure(eventStore.Object, eventSerializationStrategy.Object, true);
+            EventBus.Instance.Configure(eventStore.Object, SerializationStrategy.Object, true);
 
             EventBus.Instance.Awaiting(x => x.PublishAsync<TestAggregate, TestEvent>(guid, testEvent)).ShouldNotThrow();
 
             eventStore.Verify(x => x.SaveAsync(It.IsAny<AggregateEvent>()), Times.Once);
-            eventSerializationStrategy.Verify(x => x.SerializeEvent(testEvent), Times.Once);
+            SerializationStrategy.Verify(x => x.Serialize(testEvent), Times.Once);
         }
 
         [TestMethod]
@@ -241,16 +241,16 @@ namespace DDD.Light.Core.Tests
             var testEvent = new TestEvent();
             var eventStore = new Mock<IEventStore>();
             eventStore.Setup(x => x.SaveAsync(It.IsAny<AggregateEvent>())).Throws(new Exception("Oops")).Verifiable();
-            var eventSerializationStrategy = new Mock<IEventSerializationStrategy>();
-            eventSerializationStrategy.Setup(x => x.SerializeEvent(testEvent)).Returns("SerializedTestEvent").Verifiable();
+            var SerializationStrategy = new Mock<ISerializationStrategy>();
+            SerializationStrategy.Setup(x => x.Serialize(testEvent)).Returns("SerializedTestEvent").Verifiable();
 
-            EventBus.Instance.Configure(eventStore.Object, eventSerializationStrategy.Object, true);
+            EventBus.Instance.Configure(eventStore.Object, SerializationStrategy.Object, true);
 
             EventBus.Instance.Awaiting(x => x.PublishAsync<TestAggregate, TestEvent>(guid, testEvent))
                 .ShouldThrow<ApplicationException>();
 
             eventStore.Verify(x => x.SaveAsync(It.IsAny<AggregateEvent>()), Times.Once);
-            eventSerializationStrategy.Verify(x => x.SerializeEvent(testEvent), Times.Once);
+            SerializationStrategy.Verify(x => x.Serialize(testEvent), Times.Once);
         }
 
         [TestMethod]
@@ -261,18 +261,18 @@ namespace DDD.Light.Core.Tests
             var eventStore = new Mock<IEventStore>();
             eventStore.Setup(x => x.SaveAsync(It.IsAny<AggregateEvent>())).Returns(Task.FromResult<object>(null)).Verifiable();
             eventStore.Setup(x => x.LatestEventTimestampAsync(guid)).Returns(Task.FromResult<DateTime>(DateTime.UtcNow.AddMinutes(1))).Verifiable();
-            var eventSerializationStrategy = new Mock<IEventSerializationStrategy>();
-            eventSerializationStrategy.Setup(x => x.SerializeEvent(testEvent)).Returns("SerializedTestEvent").Verifiable();
-            eventSerializationStrategy.Setup(x => x.SerializeEvent(guid)).Returns(guid.ToString()).Verifiable();
+            var SerializationStrategy = new Mock<ISerializationStrategy>();
+            SerializationStrategy.Setup(x => x.Serialize(testEvent)).Returns("SerializedTestEvent").Verifiable();
+            SerializationStrategy.Setup(x => x.Serialize(guid)).Returns(guid.ToString()).Verifiable();
 
-            EventBus.Instance.Configure(eventStore.Object, eventSerializationStrategy.Object, true);
+            EventBus.Instance.Configure(eventStore.Object, SerializationStrategy.Object, true);
 
             EventBus.Instance.Awaiting(x => x.PublishAsync<TestAggregate, TestEvent>(guid, testEvent)).ShouldNotThrow();
 
             eventStore.Verify(x => x.SaveAsync(It.IsAny<AggregateEvent>()), Times.Once);
             eventStore.Verify(x => x.LatestEventTimestampAsync(guid), Times.Once);
-            eventSerializationStrategy.Verify(x => x.SerializeEvent(testEvent), Times.Once);
-            eventSerializationStrategy.Verify(x => x.SerializeEvent(guid), Times.Exactly(2)); //once for the AggregateCacheClear and once for the Event
+            SerializationStrategy.Verify(x => x.Serialize(testEvent), Times.Once);
+            SerializationStrategy.Verify(x => x.Serialize(guid), Times.Exactly(2)); //once for the AggregateCacheClear and once for the Event
         }
 
         [TestMethod]
@@ -283,18 +283,18 @@ namespace DDD.Light.Core.Tests
             var eventStore = new Mock<IEventStore>();
             eventStore.Setup(x => x.SaveAsync(It.IsAny<AggregateEvent>())).Returns(Task.FromResult<object>(null)).Verifiable();
             eventStore.Setup(x => x.LatestEventTimestampAsync(guid)).Returns(Task.FromResult<DateTime>(DateTime.UtcNow.AddMinutes(1))).Verifiable();
-            var eventSerializationStrategy = new Mock<IEventSerializationStrategy>();
-            eventSerializationStrategy.Setup(x => x.SerializeEvent(testEvent)).Returns("SerializedTestEvent").Verifiable();
-            eventSerializationStrategy.Setup(x => x.SerializeEvent(guid)).Returns(guid.ToString()).Verifiable();
+            var SerializationStrategy = new Mock<ISerializationStrategy>();
+            SerializationStrategy.Setup(x => x.Serialize(testEvent)).Returns("SerializedTestEvent").Verifiable();
+            SerializationStrategy.Setup(x => x.Serialize(guid)).Returns(guid.ToString()).Verifiable();
 
-            EventBus.Instance.Configure(eventStore.Object, eventSerializationStrategy.Object, false);
+            EventBus.Instance.Configure(eventStore.Object, SerializationStrategy.Object, false);
 
             EventBus.Instance.Awaiting(x => x.PublishAsync<TestAggregate, TestEvent>(guid, testEvent)).ShouldNotThrow();
 
             eventStore.Verify(x => x.SaveAsync(It.IsAny<AggregateEvent>()), Times.Once);
             eventStore.Verify(x => x.LatestEventTimestampAsync(guid), Times.Exactly(0));
-            eventSerializationStrategy.Verify(x => x.SerializeEvent(testEvent), Times.Once);
-            eventSerializationStrategy.Verify(x => x.SerializeEvent(guid), Times.Exactly(1)); //once for the Event
+            SerializationStrategy.Verify(x => x.Serialize(testEvent), Times.Once);
+            SerializationStrategy.Verify(x => x.Serialize(guid), Times.Exactly(1)); //once for the Event
         }
 
         [TestMethod]
@@ -321,15 +321,15 @@ namespace DDD.Light.Core.Tests
                         new AggregateEvent() { AggregateIdType = "guid3", AggregateType = typeof(TestAggregate).AssemblyQualifiedName, CreatedOn = DateTime.UtcNow.AddMinutes(-1), EventType = typeof(TestEvent).AssemblyQualifiedName, Id = Guid.NewGuid(), SerializedAggregateId = "guid3", SerializedEvent = "event" }
                     }
                 )).Verifiable();
-            var eventSerializationStrategy = new Mock<IEventSerializationStrategy>();
-            eventSerializationStrategy.Setup(x => x.DeserializeEvent(It.IsAny<string>(), typeof(TestEvent))).Returns(new TestEvent()).Verifiable();
+            var SerializationStrategy = new Mock<ISerializationStrategy>();
+            SerializationStrategy.Setup(x => x.Deserialize(It.IsAny<string>(), typeof(TestEvent))).Returns(new TestEvent()).Verifiable();
 
-            EventBus.Instance.Configure(eventStore.Object, eventSerializationStrategy.Object, true);
+            EventBus.Instance.Configure(eventStore.Object, SerializationStrategy.Object, true);
 
             EventBus.Instance.Awaiting(x => x.RestoreReadModelAync()).ShouldNotThrow();
 
             eventStore.Verify(x => x.GetAllAsync(), Times.Once);
-            eventSerializationStrategy.Verify(x => x.DeserializeEvent(It.IsAny<string>(), typeof(TestEvent)), Times.Exactly(3));
+            SerializationStrategy.Verify(x => x.Deserialize(It.IsAny<string>(), typeof(TestEvent)), Times.Exactly(3));
         }
 
         [TestMethod]
@@ -345,15 +345,15 @@ namespace DDD.Light.Core.Tests
                         new AggregateEvent() { AggregateIdType = "guid3", AggregateType = typeof(TestAggregate).AssemblyQualifiedName, CreatedOn = DateTime.UtcNow.AddMinutes(-1), EventType = typeof(TestEvent).AssemblyQualifiedName, Id = Guid.NewGuid(), SerializedAggregateId = "guid3", SerializedEvent = "event" }
                     }
                 )).Verifiable();
-            var eventSerializationStrategy = new Mock<IEventSerializationStrategy>();
-            eventSerializationStrategy.Setup(x => x.DeserializeEvent(It.IsAny<string>(), typeof(TestEvent))).Returns(new TestEvent()).Verifiable();
+            var SerializationStrategy = new Mock<ISerializationStrategy>();
+            SerializationStrategy.Setup(x => x.Deserialize(It.IsAny<string>(), typeof(TestEvent))).Returns(new TestEvent()).Verifiable();
 
-            EventBus.Instance.Configure(eventStore.Object, eventSerializationStrategy.Object, true);
+            EventBus.Instance.Configure(eventStore.Object, SerializationStrategy.Object, true);
 
             EventBus.Instance.Awaiting(x => x.RestoreReadModelAync(until)).ShouldNotThrow();
 
             eventStore.Verify(x => x.GetAllAsync(until), Times.Once);
-            eventSerializationStrategy.Verify(x => x.DeserializeEvent(It.IsAny<string>(), typeof(TestEvent)), Times.Exactly(3));
+            SerializationStrategy.Verify(x => x.Deserialize(It.IsAny<string>(), typeof(TestEvent)), Times.Exactly(3));
         }
     }
 }

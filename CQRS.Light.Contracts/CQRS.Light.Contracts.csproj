@@ -69,7 +69,7 @@
     <Compile Include="IEventBus.cs" />
     <Compile Include="IEventHandler.cs" />
     <Compile Include="IEventHandlersDatabase.cs" />
-    <Compile Include="IEventSerializationStrategy.cs" />
+    <Compile Include="ISerializationStrategy.cs" />
     <Compile Include="IEventStore.cs" />
     <Compile Include="IHandler.cs" />
     <Compile Include="IRepository.cs" />

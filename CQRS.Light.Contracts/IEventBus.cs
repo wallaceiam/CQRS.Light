@@ -9,8 +9,8 @@ namespace CQRS.Light.Contracts
         void Subscribe<T>(Func<T, Task> handler);
         Task PublishAsync<T>(Type aggregateType, Guid aggregateId, T @event);
         Task PublishAsync<TAggregate, T>(Guid aggregateId, T @event);
-        void Configure(IEventStore eventStore, IEventSerializationStrategy eventSerializationStrategy);
-        void Configure(IEventStore eventStore, IEventSerializationStrategy eventSerializationStrategy, bool checkLatestEventTimestampPriorToSavingToEventStore);
+        void Configure(IEventStore eventStore, ISerializationStrategy SerializationStrategy);
+        void Configure(IEventStore eventStore, ISerializationStrategy SerializationStrategy, bool checkLatestEventTimestampPriorToSavingToEventStore);
         Task RestoreReadModelAync();
         Task RestoreReadModelAync(DateTime until);
         IEventStore GetEventStore();

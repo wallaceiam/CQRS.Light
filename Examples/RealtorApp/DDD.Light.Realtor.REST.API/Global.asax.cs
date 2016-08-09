@@ -26,8 +26,8 @@ namespace DDD.Light.Realtor.REST.API
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             SetUpIoC();
 
-            EventStore.Instance.Configure(new MongoRepository<AggregateEvent>("mongodb://localhost", "DDD_Light_Realtor", "EventStore"), new JsonEventSerializationStrategy());
-            EventBus.Instance.Configure(EventStore.Instance, new JsonEventSerializationStrategy(), false);
+            EventStore.Instance.Configure(new MongoRepository<AggregateEvent>("mongodb://localhost", "DDD_Light_Realtor", "EventStore"), new JsonSerializationStrategy());
+            EventBus.Instance.Configure(EventStore.Instance, new JsonSerializationStrategy(), false);
 
             AggregateCache.Instance.Configure(EventStore.Instance, DependencyResolution.ObjectFactory.Container.GetInstance);
             AggregateBus.Instance.Configure(EventBus.Instance, AggregateCache.Instance);

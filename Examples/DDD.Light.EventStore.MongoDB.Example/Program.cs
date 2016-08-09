@@ -17,8 +17,8 @@ namespace DDD.Light.EventStore.MongoDB.Example
             var personReadModel = new InMemoryRepository<PersonDTO>();
             var aggregateEventRepo = new InMemoryRepository<AggregateEvent>();
 
-            CQRS.Light.Core.EventStore.Instance.Configure(aggregateEventRepo, new JsonEventSerializationStrategy());
-            EventBus.Instance.Configure(CQRS.Light.Core.EventStore.Instance, new JsonEventSerializationStrategy(), false);
+            CQRS.Light.Core.EventStore.Instance.Configure(aggregateEventRepo, new JsonSerializationStrategy());
+            EventBus.Instance.Configure(CQRS.Light.Core.EventStore.Instance, new JsonSerializationStrategy(), false);
             
             AggregateBus.Instance.Configure(EventBus.Instance, AggregateCache.Instance);
             EventBus.Instance.Subscribe(async (PersonCreated personCreated) =>

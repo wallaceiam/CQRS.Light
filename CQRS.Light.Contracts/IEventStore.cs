@@ -6,8 +6,8 @@ namespace CQRS.Light.Contracts
 {
     public interface IEventStore
     {
-        void Configure(IRepository<AggregateEvent> repo, IEventSerializationStrategy serializationStrategy);
-
+        void Configure(IRepository<AggregateEvent> repo, ISerializationStrategy serializationStrategy);
+        void Reset();
         Task<TAggregate> GetByIdAsync<TAggregate>(Guid id);
         Task<TAggregate> GetByIdAsync<TAggregate>(Guid id, DateTime until);
         Task<object> GetByIdAsync(Guid id);
