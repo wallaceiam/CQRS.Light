@@ -10,6 +10,6 @@ namespace CQRS.Light.Contracts
         public string EventType { get; set; }        
         public string SerializedEvent { get; set; }
         public string AggregateIdType { get; set; }
-        public string SerializedAggregateId { get; set; }
+        public Guid AggregateId { get; set; }
     }
 }

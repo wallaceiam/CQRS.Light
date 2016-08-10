@@ -19,7 +19,6 @@ namespace CQRS.Light.Core
             :this(aggregateBus)
         {
             Id = id;
-            _aggregateBus = aggregateBus;
         }
 
         public async Task PublishAndApplyEventAsync<TAggregate, TEvent>(TEvent @event) where TAggregate : IAggregateRoot

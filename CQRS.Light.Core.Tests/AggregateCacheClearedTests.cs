@@ -11,12 +11,13 @@ namespace DDD.Light.Core.Tests
         [TestMethod]
         public void AggregateCacheCleared_ConstructorAssignsValues()
         {
+            var guid = Guid.NewGuid();
             var aggregateCache = new AggregateCacheCleared(
-                "myserializedid",
+                guid,
                 typeof(string),
                 typeof(AggregateCacheCleared));
 
-            aggregateCache.SerializedAggregateId.Should().Be("myserializedid");
+            aggregateCache.AggregateId.Should().Be(guid);
             aggregateCache.AggregateIdType.Should().Be(typeof(string));
             aggregateCache.AggregateType.Should().Be(typeof(AggregateCacheCleared));
         }
@@ -26,7 +27,7 @@ namespace DDD.Light.Core.Tests
         {
             // Arrange
             Action a = () => new AggregateCacheCleared(
-                null,
+                Guid.Empty,
                 typeof(string),
                 typeof(AggregateCacheCleared));         // null is an invalid argument
 

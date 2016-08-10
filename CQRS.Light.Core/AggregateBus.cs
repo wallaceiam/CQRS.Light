@@ -53,11 +53,11 @@ namespace CQRS.Light.Core
 
         private async Task AggregateCacheClearAsync(AggregateCacheCleared e)
         {
-            foreach(var aggregateCache in _registeredAggregateCaches)
+            foreach (var aggregateCache in _registeredAggregateCaches)
             {
                 var mi = aggregateCache.GetType().GetMethod("ClearAsync", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
                 mi = mi.MakeGenericMethod(e.AggregateType);
-                Task result = (Task)mi.Invoke(aggregateCache, null);
+                Task result = (Task)mi.Invoke(aggregateCache, new object[] { e.AggregateId });
                 await result;
             }
             //return _registeredAggregateCaches.ForEach(x => await x.ClearAsync(Guid.Parse(e.SerializedAggregateId), e.AggregateType);

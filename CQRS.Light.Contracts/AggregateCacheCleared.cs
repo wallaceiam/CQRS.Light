@@ -4,16 +4,16 @@ namespace CQRS.Light.Contracts
 {
     public class AggregateCacheCleared
     {
-        public string SerializedAggregateId { get; private set; }
+        public Guid AggregateId { get; private set; }
         public Type AggregateIdType { get; private set; }
         public Type AggregateType { get; private set; }
 
-        public AggregateCacheCleared(string serializedAggregateId, Type aggregateIdType, Type aggregateType)
+        public AggregateCacheCleared(Guid aggregateId, Type aggregateIdType, Type aggregateType)
         {
-            if (string.IsNullOrWhiteSpace(serializedAggregateId))
+            if (aggregateId == Guid.Empty )
                 throw new ArgumentNullException("serializedAggregateId");
 
-            SerializedAggregateId = serializedAggregateId;
+            AggregateId = aggregateId;
             AggregateIdType = aggregateIdType;
             AggregateType = aggregateType;
         }

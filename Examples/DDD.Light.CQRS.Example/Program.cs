@@ -16,7 +16,7 @@ namespace DDD.Light.Messaging.Example
             //XmlConfigurator.Configure();
             //var log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
             //EventStore.Instance.Configure(new MongoRepository<AggregateEvent>("mongodb://localhost", "DDD_Light_Messaging_Example", "EventStore"), new JsonSerializationStrategy());
-            EventStore.Instance.Configure(new InMemoryRepository<AggregateEvent>(), new JsonSerializationStrategy());
+            EventStore.Instance.Configure(new InMemoryRepository<AggregateEvent>(), new JsonSerializationStrategy(), AggregateBus.Instance);
             EventBus.Instance.Configure(EventStore.Instance, new JsonSerializationStrategy(), false);
 
 

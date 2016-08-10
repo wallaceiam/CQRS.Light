@@ -107,7 +107,7 @@ namespace CQRS.Light.Core
             var eventType = typeof (TEvent);
             var method = typeof (TAggregate).GetMethod("ApplyEvent", BindingFlags.NonPublic | BindingFlags.Instance, null, new[] {eventType}, null);
             if (method == null)
-                throw new InvalidOperationException(string.Format("{0} does not contain a non-public method ApplyEvent accepting parameter type {1}",
+                throw new NotImplementedException(string.Format("{0} does not contain a non-public method ApplyEvent accepting parameter type {1}",
                     typeof(TAggregate).ToString(),
                     eventType));
             method.Invoke(aggregate, new[] {@event as Object});

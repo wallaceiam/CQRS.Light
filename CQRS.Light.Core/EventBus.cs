@@ -56,19 +56,19 @@ namespace CQRS.Light.Core
             await HandleEventAsync(@event);
         }
 
-        public void Configure(IEventStore eventStore, ISerializationStrategy SerializationStrategy)
+        public void Configure(IEventStore eventStore, ISerializationStrategy serializationStrategy)
         {
-            Configure(eventStore, SerializationStrategy, true);
+            Configure(eventStore, serializationStrategy, true);
         }
 
         //todo: make reason behind checkLatestEventTimestampPriorToSavingToEventStore less ambiguious
-        public void Configure(IEventStore eventStore, ISerializationStrategy SerializationStrategy, bool checkLatestEventTimestampPriorToSavingToEventStore)
+        public void Configure(IEventStore eventStore, ISerializationStrategy serializationStrategy, bool checkLatestEventTimestampPriorToSavingToEventStore)
         {
             if (eventStore == null) throw new ArgumentNullException("eventStore");
-            if (SerializationStrategy == null) throw new ArgumentNullException("SerializationStrategy");
+            if (serializationStrategy == null) throw new ArgumentNullException("serializationStrategy");
 
             _eventStore = eventStore;
-            _serializationStrategy = SerializationStrategy;
+            _serializationStrategy = serializationStrategy;
             _checkLatestEventTimestampPriorToSavingToEventStore = checkLatestEventTimestampPriorToSavingToEventStore;
         }
 
@@ -106,8 +106,8 @@ namespace CQRS.Light.Core
                         if (DateTime.Compare(DateTime.UtcNow, latestCreatedOnInEventStore) < 0)
                         //earlier than in event store
                         {
-                            var serializedAggregateId = _serializationStrategy.Serialize(aggregateId);
-                            await PublishAsync(GetType(), aggregateId, new AggregateCacheCleared(serializedAggregateId, typeof(Guid), aggregateType));
+                            //var serializedAggregateId = _serializationStrategy.Serialize(aggregateId);
+                            await PublishAsync(GetType(), aggregateId, new AggregateCacheCleared(aggregateId, typeof(Guid), aggregateType));
                         }
                     }
                     await _eventStore.SaveAsync(new AggregateEvent
@@ -117,7 +117,7 @@ namespace CQRS.Light.Core
                         EventType = typeof(TEvent).AssemblyQualifiedName,
                         CreatedOn = DateTime.UtcNow,
                         SerializedEvent = _serializationStrategy.Serialize(@event),
-                        SerializedAggregateId = _serializationStrategy.Serialize(aggregateId),
+                        AggregateId = aggregateId, //_serializationStrategy.Serialize(aggregateId),
                         AggregateIdType = typeof(Guid).AssemblyQualifiedName
                     });
                 }

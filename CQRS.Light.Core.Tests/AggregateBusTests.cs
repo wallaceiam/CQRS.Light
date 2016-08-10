@@ -5,6 +5,7 @@ using CQRS.Light.Contracts;
 using CQRS.Light.Core;
 using System.Threading.Tasks;
 using System.Linq;
+using Moq;
 
 namespace DDD.Light.Core.Tests
 {
@@ -92,5 +93,32 @@ namespace DDD.Light.Core.Tests
             aggregateCache.Verify(m => m.HandleAsync<TestAggregate, TestEvent>(guid, @event), Moq.Times.Once);
         }
 
+
+        [TestMethod]
+        public void AggregateBus_WillHandleAggregateCacheClearEvent()
+        {
+            var guid = Guid.NewGuid();
+            var eventStore = new Mock<IEventStore>();
+
+            var repo = new Mock<IRepository<TestAggregateRoot>>();
+            repo.Setup(x => x.DeleteAsync(guid)).Returns(Task.FromResult<object>(null)).Verifiable();
+
+            var funcWasCalled = false;
+            Func<Type, object> func = (x) => { funcWasCalled = true;
+                return repo.Object.As<IRepository<TestAggregateRoot>>(); };
+
+
+            AggregateCache.Instance.Configure(eventStore.Object, func);
+
+            AggregateBus.Instance.Configure(EventBus.Instance, AggregateCache.Instance);
+            EventBus.Instance.Configure(eventStore.Object, new JsonSerializationStrategy());
+
+            EventBus.Instance.Awaiting(
+                x => x.PublishAsync<AggregateCacheCleared>(typeof(TestAggregateRoot), guid,
+                new AggregateCacheCleared(guid, typeof(Guid), typeof(TestAggregateRoot)))
+                ).ShouldNotThrow();
+
+            repo.Verify(x => x.DeleteAsync(guid), Times.Once);
+        }
     }
 }

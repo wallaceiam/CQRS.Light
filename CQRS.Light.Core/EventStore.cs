@@ -13,6 +13,7 @@ namespace CQRS.Light.Core
         private IRepository<AggregateEvent> _repo;
         private static object token = new Object();
         private ISerializationStrategy _serializationStrategy;
+        private IAggregateBus _aggregateBus;
 
         public static IEventStore Instance
         {
@@ -30,13 +31,15 @@ namespace CQRS.Light.Core
             }
         }
 
-        public void Configure(IRepository<AggregateEvent> repo, ISerializationStrategy SerializationStrategy)
+        public void Configure(IRepository<AggregateEvent> repo, ISerializationStrategy serializationStrategy, IAggregateBus aggregateBus)
         {
             if (repo == null) throw new ArgumentNullException("repo");
-            if (SerializationStrategy == null) throw new ArgumentNullException("SerializationStrategy");
-            
+            if (serializationStrategy == null) throw new ArgumentNullException("SerializationStrategy");
+            if (aggregateBus == null) throw new ArgumentNullException("aggregateBus");
+
             _repo = repo;
-            _serializationStrategy = SerializationStrategy;
+            _serializationStrategy = serializationStrategy;
+            _aggregateBus = aggregateBus;
         }
 
         public void Reset()
@@ -69,48 +72,62 @@ namespace CQRS.Light.Core
             //this seems overkill to deserialize to get the created on
             //var aggregateEvents = (await _repo.GetAsync()).Where(x => _SerializationStrategy.DeserializeEvent(x.SerializedAggregateId, Type.GetType(x.AggregateIdType)).Equals(aggregateId)).OrderByDescending(x => x.CreatedOn);
             //return aggregateEvents.Any() ? aggregateEvents.First().CreatedOn : new DateTime();
-            var serializedAggregateId = _serializationStrategy.Serialize(aggregateId);
-            var latestAggregateEvent = (await _repo.GetAsync()).Where(x => x.SerializedAggregateId == serializedAggregateId).OrderByDescending(x => x.CreatedOn).FirstOrDefault();
+            //var serializedAggregateId = _serializationStrategy.Serialize(aggregateId);
+            var latestAggregateEvent = (await _repo.GetAsync()).Where(x => x.AggregateId == aggregateId).OrderByDescending(x => x.CreatedOn).FirstOrDefault();
             return latestAggregateEvent != null ? latestAggregateEvent.CreatedOn : DateTime.MinValue;
         }
 
         private void VerifyIsConfigured()
         {
-            if (_repo == null || _serializationStrategy == null)
+            if (_repo == null || _serializationStrategy == null || _aggregateBus == null)
                 throw new InvalidOperationException("EventStore.Instance.Configure must be called before it can be used.");
         }
 
-        public async Task<TAggregate> GetByIdAsync<TAggregate>(Guid id) 
+        public async Task<TAggregate> GetByIdAsync<TAggregate>(Guid id)
         {
             VerifyIsConfigured();
 
             var constructors = (typeof(TAggregate)).GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance);
-            var aggregate = (TAggregate)constructors[0].Invoke(new object[] { });
+            if (constructors.Length < 1)
+                throw new NotImplementedException(string.Format("Could not create {0}, no non-public constructor found.", typeof(TAggregate)));
+            var aggregate = (TAggregate)constructors[0].Invoke(new object[] { _aggregateBus });
 
-            (await _repo.GetAsync()).Where(x => _serializationStrategy.Deserialize(x.SerializedAggregateId, Type.GetType(x.AggregateIdType)).Equals(id)).OrderBy(x => x.CreatedOn).ToList().ForEach(aggregateEvent =>
-                {
-                    var eventType = Type.GetType(aggregateEvent.EventType);
-                    var @event = _serializationStrategy.Deserialize(aggregateEvent.SerializedEvent, eventType);
-                    var method = typeof(TAggregate).GetMethod("ApplyEvent", BindingFlags.NonPublic | BindingFlags.Instance, null, new[]{eventType}, null);
-                    method.Invoke(aggregate, new[] { @event });
-                });
+            //(await _repo.GetAsync()).Where(x => _serializationStrategy.Deserialize(x.AggregateId, Type.GetType(x.AggregateIdType)).Equals(id)).OrderBy(x => x.CreatedOn).ToList().ForEach(aggregateEvent =>
+            (await _repo.GetAsync()).Where(x => x.AggregateId == id).OrderBy(x => x.CreatedOn).ToList().ForEach(aggregateEvent =>
+            {
+                var eventType = Type.GetType(aggregateEvent.EventType);
+                var @event = _serializationStrategy.Deserialize(aggregateEvent.SerializedEvent, eventType);
+                var method = typeof(TAggregate).GetMethod("ApplyEvent", BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { eventType }, null);
+                if (method == null)
+                    throw new NotImplementedException(string.Format("{0} does not contain a non-public method ApplyEvent accepting parameter type {1}",
+                        typeof(TAggregate).ToString(),
+                        eventType));
+                method.Invoke(aggregate, new[] { @event });
+            });
             return aggregate;
         }
-        
-        public async Task<TAggregate> GetByIdAsync<TAggregate>(Guid id, DateTime until) 
+
+        public async Task<TAggregate> GetByIdAsync<TAggregate>(Guid id, DateTime until)
         {
             VerifyIsConfigured();
 
             var constructors = (typeof(TAggregate)).GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance);
-            var aggregate = (TAggregate)constructors[0].Invoke(new object[] { });
+            if (constructors.Length < 1)
+                throw new NotImplementedException(string.Format("Could not create {0}, no non-public constructor found.", typeof(TAggregate)));
+            var aggregate = (TAggregate)constructors[0].Invoke(new object[] { _aggregateBus });
 
-            (await _repo.GetAsync()).Where(x => _serializationStrategy.Deserialize(x.SerializedAggregateId, Type.GetType(x.AggregateIdType)).Equals(id) && DateTime.Compare(x.CreatedOn, until) <= 0).OrderBy(x => x.CreatedOn).ToList().ForEach(aggregateEvent =>
-                {
-                    var eventType = Type.GetType(aggregateEvent.EventType);
-                    var @event = _serializationStrategy.Deserialize(aggregateEvent.SerializedEvent, eventType);
-                    var method = typeof(TAggregate).GetMethod("ApplyEvent", BindingFlags.NonPublic | BindingFlags.Instance, null, new[]{eventType}, null);
-                    method.Invoke(aggregate, new[] { @event });
-                });
+            //(await _repo.GetAsync()).Where(x => _serializationStrategy.Deserialize(x.AggregateId, Type.GetType(x.AggregateIdType)).Equals(id) && DateTime.Compare(x.CreatedOn, until) <= 0).OrderBy(x => x.CreatedOn).ToList().ForEach(aggregateEvent =>
+            (await _repo.GetAsync()).Where(x => x.AggregateId == id).OrderBy(x => x.CreatedOn).ToList().ForEach(aggregateEvent =>
+            {
+                var eventType = Type.GetType(aggregateEvent.EventType);
+                var @event = _serializationStrategy.Deserialize(aggregateEvent.SerializedEvent, eventType);
+                var method = typeof(TAggregate).GetMethod("ApplyEvent", BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { eventType }, null);
+                if (method == null)
+                    throw new NotImplementedException(string.Format("{0} does not contain a non-public method ApplyEvent accepting parameter type {1}",
+                        typeof(TAggregate).ToString(),
+                        eventType));
+                method.Invoke(aggregate, new[] { @event });
+            });
             return aggregate;
         }
 
@@ -118,30 +135,35 @@ namespace CQRS.Light.Core
         {
             VerifyIsConfigured();
 
-            if (!(await _repo.GetAsync()).Any(x => _serializationStrategy.Deserialize(x.SerializedAggregateId, Type.GetType(x.AggregateIdType)).Equals(id))) return null;
+            //if (!(await _repo.GetAsync()).Any(x => _serializationStrategy.Deserialize(x.AggregateId, Type.GetType(x.AggregateIdType)).Equals(id))) return null;
 
-            var serializedAggregateType = (await _repo.GetAsync()).First(x => _serializationStrategy.Deserialize(x.SerializedAggregateId, Type.GetType(x.AggregateIdType)).Equals(id)).AggregateType;
+            //var serializedAggregateType = (await _repo.GetAsync()).First(x => _serializationStrategy.Deserialize(x.AggregateId, Type.GetType(x.AggregateIdType)).Equals(id)).AggregateType;
+            var serializedAggregateType = (await _repo.GetAsync()).Where(x => x.AggregateId == id).Select(x => x.AggregateType).FirstOrDefault();
+
+            if (serializedAggregateType == null)
+                return null;
 
             var aggregateType = Type.GetType(serializedAggregateType);
 
             if (aggregateType == null) return null;
 
             var constructors = aggregateType.GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance);
-            var aggregate = constructors[0].Invoke(new object[] { });
+            if (constructors.Length < 1)
+                throw new NotImplementedException(string.Format("Could not create {0}, no non-public constructor found.", aggregateType));
 
-            (await _repo.GetAsync()).Where(x => _serializationStrategy.Deserialize(x.SerializedAggregateId, Type.GetType(x.AggregateIdType)).Equals(id)).OrderBy(x => x.CreatedOn).ToList().ForEach(aggregateEvent =>
+            var aggregate = constructors[0].Invoke(new object[] { _aggregateBus });
+
+            //(await _repo.GetAsync()).Where(x => _serializationStrategy.Deserialize(x.AggregateId, Type.GetType(x.AggregateIdType)).Equals(id)).OrderBy(x => x.CreatedOn).ToList().ForEach(aggregateEvent =>
+            (await _repo.GetAsync()).Where(x => x.AggregateId == id).OrderBy(x => x.CreatedOn).ToList().ForEach(aggregateEvent =>
             {
                 var eventType = Type.GetType(aggregateEvent.EventType);
                 var @event = _serializationStrategy.Deserialize(aggregateEvent.SerializedEvent, eventType);
                 var method = aggregateType.GetMethod("ApplyEvent", BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { eventType }, null);
-                try
-                {
-                    method.Invoke(aggregate, new[] {@event});
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("Please check if ApplyEvent for eventTyoe: " + aggregateEvent.EventType + " defined on aggregate: " + serializedAggregateType, ex);
-                }
+                if (method == null)
+                    throw new NotImplementedException(string.Format("{0} does not contain a non-public method ApplyEvent accepting parameter type {1}",
+                        aggregateType.ToString(),
+                        eventType));
+                method.Invoke(aggregate, new[] { @event });
             });
             return aggregate;
         }
@@ -157,10 +179,10 @@ namespace CQRS.Light.Core
             VerifyIsConfigured();
 
             var deserializedEvents = new List<TEvent>();
-            var serializedEvents = (await GetAllAsync()).Where(e => Type.GetType(e.EventType) == typeof(TEvent)).ToList();
+            var serializedEvents = (await _repo.GetAsync()).Where(e => Type.GetType(e.EventType) == typeof(TEvent)).ToList();
             serializedEvents.ForEach(s =>
                 {
-                    var deserializedEvent = (TEvent)_serializationStrategy.Deserialize(s.SerializedEvent, typeof (TEvent));
+                    var deserializedEvent = (TEvent)_serializationStrategy.Deserialize(s.SerializedEvent, typeof(TEvent));
                     deserializedEvents.Add(deserializedEvent);
                 });
 

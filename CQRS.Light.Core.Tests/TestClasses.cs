@@ -44,6 +44,34 @@ namespace DDD.Light.Core.Tests
             this.WasApplyEventCalled = false;
         }
 
+        protected TestAggregateRoot(IAggregateBus aggregateBus)
+            :base(aggregateBus)
+        {
+
+        }
+
+        public bool WasApplyEventCalled { get; protected set; }
+
+        private void ApplyEvent(TestEvent @event)
+        {
+            this.WasApplyEventCalled = true;
+        }
+
+        private void ApplyEventDoesNotApply(TestEvent2 @event)
+        {
+
+        }
+    }
+
+    public class MissingConstructorAggregateRoot : AggregateRoot
+    {
+        public MissingConstructorAggregateRoot(IAggregateBus aggregateBus, Guid guid)
+            : base(aggregateBus, guid)
+        {
+            this.WasApplyEventCalled = false;
+        }
+
+
         public bool WasApplyEventCalled { get; protected set; }
 
         private void ApplyEvent(TestEvent @event)

@@ -101,6 +101,13 @@ namespace DDD.Light.Core.Tests
         }
 
         [TestMethod]
+        public void EventBus_ConfigureShouldReallyNotAllowNulls()
+        {
+            var eventStore = new Mock<IEventStore>();
+            EventBus.Instance.Invoking(x => x.Configure(eventStore.Object, null, false)).ShouldThrow<ArgumentNullException>();
+        }
+
+        [TestMethod]
         public void EventBus_ConfigureOverloadShouldAssignValues()
         {
             var eventStore = new Mock<IEventStore>();
@@ -182,7 +189,7 @@ namespace DDD.Light.Core.Tests
             eventStore.Verify(x => x.SaveAsync(It.IsAny<AggregateEvent>()), Times.Once);
             eventStore.Verify(x => x.LatestEventTimestampAsync(guid), Times.Once);
             SerializationStrategy.Verify(x => x.Serialize(testEvent), Times.Once);
-            SerializationStrategy.Verify(x => x.Serialize(guid), Times.Exactly(2)); //once for the AggregateCacheClear and once for the Event
+            SerializationStrategy.Verify(x => x.Serialize(guid), Times.Once);
         }
 
         [TestMethod]
@@ -204,7 +211,7 @@ namespace DDD.Light.Core.Tests
             eventStore.Verify(x => x.SaveAsync(It.IsAny<AggregateEvent>()), Times.Once);
             eventStore.Verify(x => x.LatestEventTimestampAsync(guid), Times.Exactly(0));
             SerializationStrategy.Verify(x => x.Serialize(testEvent), Times.Once);
-            SerializationStrategy.Verify(x => x.Serialize(guid), Times.Exactly(1)); //once for the Event
+            SerializationStrategy.Verify(x => x.Serialize(guid), Times.Never);
         }
 
         [TestMethod]
@@ -272,7 +279,7 @@ namespace DDD.Light.Core.Tests
             eventStore.Verify(x => x.SaveAsync(It.IsAny<AggregateEvent>()), Times.Once);
             eventStore.Verify(x => x.LatestEventTimestampAsync(guid), Times.Once);
             SerializationStrategy.Verify(x => x.Serialize(testEvent), Times.Once);
-            SerializationStrategy.Verify(x => x.Serialize(guid), Times.Exactly(2)); //once for the AggregateCacheClear and once for the Event
+            SerializationStrategy.Verify(x => x.Serialize(guid), Times.Once);
         }
 
         [TestMethod]
@@ -294,7 +301,7 @@ namespace DDD.Light.Core.Tests
             eventStore.Verify(x => x.SaveAsync(It.IsAny<AggregateEvent>()), Times.Once);
             eventStore.Verify(x => x.LatestEventTimestampAsync(guid), Times.Exactly(0));
             SerializationStrategy.Verify(x => x.Serialize(testEvent), Times.Once);
-            SerializationStrategy.Verify(x => x.Serialize(guid), Times.Exactly(1)); //once for the Event
+            SerializationStrategy.Verify(x => x.Serialize(guid), Times.Never);
         }
 
         [TestMethod]
@@ -316,9 +323,9 @@ namespace DDD.Light.Core.Tests
             eventStore.Setup(x => x.GetAllAsync()).Returns(Task.FromResult<IEnumerable<AggregateEvent>>(
                     new List<AggregateEvent>()
                     {
-                        new AggregateEvent() { AggregateIdType = "guid1", AggregateType = typeof(TestAggregate).AssemblyQualifiedName, CreatedOn = DateTime.UtcNow.AddMinutes(-3), EventType = typeof(TestEvent).AssemblyQualifiedName, Id = Guid.NewGuid(), SerializedAggregateId = "guid1", SerializedEvent = "event" },
-                        new AggregateEvent() { AggregateIdType = "guid2", AggregateType = typeof(TestAggregate).AssemblyQualifiedName, CreatedOn = DateTime.UtcNow.AddMinutes(-2), EventType = typeof(TestEvent).AssemblyQualifiedName, Id = Guid.NewGuid(), SerializedAggregateId = "guid2", SerializedEvent = "event" },
-                        new AggregateEvent() { AggregateIdType = "guid3", AggregateType = typeof(TestAggregate).AssemblyQualifiedName, CreatedOn = DateTime.UtcNow.AddMinutes(-1), EventType = typeof(TestEvent).AssemblyQualifiedName, Id = Guid.NewGuid(), SerializedAggregateId = "guid3", SerializedEvent = "event" }
+                        new AggregateEvent() { AggregateIdType = "guid1", AggregateType = typeof(TestAggregate).AssemblyQualifiedName, CreatedOn = DateTime.UtcNow.AddMinutes(-3), EventType = typeof(TestEvent).AssemblyQualifiedName, Id = Guid.NewGuid(), AggregateId = Guid.NewGuid(), SerializedEvent = "event" },
+                        new AggregateEvent() { AggregateIdType = "guid2", AggregateType = typeof(TestAggregate).AssemblyQualifiedName, CreatedOn = DateTime.UtcNow.AddMinutes(-2), EventType = typeof(TestEvent).AssemblyQualifiedName, Id = Guid.NewGuid(), AggregateId = Guid.NewGuid(), SerializedEvent = "event" },
+                        new AggregateEvent() { AggregateIdType = "guid3", AggregateType = typeof(TestAggregate).AssemblyQualifiedName, CreatedOn = DateTime.UtcNow.AddMinutes(-1), EventType = typeof(TestEvent).AssemblyQualifiedName, Id = Guid.NewGuid(), AggregateId = Guid.NewGuid(), SerializedEvent = "event" }
                     }
                 )).Verifiable();
             var SerializationStrategy = new Mock<ISerializationStrategy>();
@@ -340,9 +347,9 @@ namespace DDD.Light.Core.Tests
             eventStore.Setup(x => x.GetAllAsync(until)).Returns(Task.FromResult<IEnumerable<AggregateEvent>>(
                     new List<AggregateEvent>()
                     {
-                        new AggregateEvent() { AggregateIdType = "guid1", AggregateType = typeof(TestAggregate).AssemblyQualifiedName, CreatedOn = DateTime.UtcNow.AddMinutes(-3), EventType = typeof(TestEvent).AssemblyQualifiedName, Id = Guid.NewGuid(), SerializedAggregateId = "guid1", SerializedEvent = "event" },
-                        new AggregateEvent() { AggregateIdType = "guid2", AggregateType = typeof(TestAggregate).AssemblyQualifiedName, CreatedOn = DateTime.UtcNow.AddMinutes(-2), EventType = typeof(TestEvent).AssemblyQualifiedName, Id = Guid.NewGuid(), SerializedAggregateId = "guid2", SerializedEvent = "event" },
-                        new AggregateEvent() { AggregateIdType = "guid3", AggregateType = typeof(TestAggregate).AssemblyQualifiedName, CreatedOn = DateTime.UtcNow.AddMinutes(-1), EventType = typeof(TestEvent).AssemblyQualifiedName, Id = Guid.NewGuid(), SerializedAggregateId = "guid3", SerializedEvent = "event" }
+                        new AggregateEvent() { AggregateIdType = "guid1", AggregateType = typeof(TestAggregate).AssemblyQualifiedName, CreatedOn = DateTime.UtcNow.AddMinutes(-3), EventType = typeof(TestEvent).AssemblyQualifiedName, Id = Guid.NewGuid(), AggregateId = Guid.NewGuid(), SerializedEvent = "event" },
+                        new AggregateEvent() { AggregateIdType = "guid2", AggregateType = typeof(TestAggregate).AssemblyQualifiedName, CreatedOn = DateTime.UtcNow.AddMinutes(-2), EventType = typeof(TestEvent).AssemblyQualifiedName, Id = Guid.NewGuid(), AggregateId = Guid.NewGuid(), SerializedEvent = "event" },
+                        new AggregateEvent() { AggregateIdType = "guid3", AggregateType = typeof(TestAggregate).AssemblyQualifiedName, CreatedOn = DateTime.UtcNow.AddMinutes(-1), EventType = typeof(TestEvent).AssemblyQualifiedName, Id = Guid.NewGuid(), AggregateId = Guid.NewGuid(), SerializedEvent = "event" }
                     }
                 )).Verifiable();
             var SerializationStrategy = new Mock<ISerializationStrategy>();

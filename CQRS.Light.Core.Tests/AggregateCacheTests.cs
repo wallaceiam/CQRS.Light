@@ -160,7 +160,7 @@ namespace DDD.Light.Core.Tests
 
             AggregateCache.Instance.Configure(eventStore.Object, func);
 
-            AggregateCache.Instance.Awaiting(x => x.HandleAsync<MissingApplyTestAggregate, TestEvent>(guid, @event)).ShouldThrowExactly<InvalidOperationException>();
+            AggregateCache.Instance.Awaiting(x => x.HandleAsync<MissingApplyTestAggregate, TestEvent>(guid, @event)).ShouldThrowExactly<NotImplementedException>();
 
             funcWasCalled.Should().BeTrue();
 
