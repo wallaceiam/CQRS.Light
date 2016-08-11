@@ -40,6 +40,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CQRS.Light.Core.Tests", "CQ
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CQRS.Light.Repository.MongoDB", "CQRS.Light.Repository.MongoDB\CQRS.Light.Repository.MongoDB.csproj", "{AD1F872F-E8C6-41C7-A7F0-21CCB3AE1EC1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CQRS.Light.Tutorial", "CQRS.Light.Tutorial\CQRS.Light.Tutorial.csproj", "{934D1A96-BA4D-4FA4-8324-3B70646A8B4D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -260,6 +262,24 @@ Global
 		{AD1F872F-E8C6-41C7-A7F0-21CCB3AE1EC1}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{AD1F872F-E8C6-41C7-A7F0-21CCB3AE1EC1}.Release|x86.ActiveCfg = Release|Any CPU
 		{AD1F872F-E8C6-41C7-A7F0-21CCB3AE1EC1}.Release|x86.Build.0 = Release|Any CPU
+		{934D1A96-BA4D-4FA4-8324-3B70646A8B4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{934D1A96-BA4D-4FA4-8324-3B70646A8B4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{934D1A96-BA4D-4FA4-8324-3B70646A8B4D}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{934D1A96-BA4D-4FA4-8324-3B70646A8B4D}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{934D1A96-BA4D-4FA4-8324-3B70646A8B4D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{934D1A96-BA4D-4FA4-8324-3B70646A8B4D}.Debug|x86.Build.0 = Debug|Any CPU
+		{934D1A96-BA4D-4FA4-8324-3B70646A8B4D}.Nuget|Any CPU.ActiveCfg = Release|Any CPU
+		{934D1A96-BA4D-4FA4-8324-3B70646A8B4D}.Nuget|Any CPU.Build.0 = Release|Any CPU
+		{934D1A96-BA4D-4FA4-8324-3B70646A8B4D}.Nuget|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{934D1A96-BA4D-4FA4-8324-3B70646A8B4D}.Nuget|Mixed Platforms.Build.0 = Release|Any CPU
+		{934D1A96-BA4D-4FA4-8324-3B70646A8B4D}.Nuget|x86.ActiveCfg = Release|Any CPU
+		{934D1A96-BA4D-4FA4-8324-3B70646A8B4D}.Nuget|x86.Build.0 = Release|Any CPU
+		{934D1A96-BA4D-4FA4-8324-3B70646A8B4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{934D1A96-BA4D-4FA4-8324-3B70646A8B4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{934D1A96-BA4D-4FA4-8324-3B70646A8B4D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{934D1A96-BA4D-4FA4-8324-3B70646A8B4D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{934D1A96-BA4D-4FA4-8324-3B70646A8B4D}.Release|x86.ActiveCfg = Release|Any CPU
+		{934D1A96-BA4D-4FA4-8324-3B70646A8B4D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -274,5 +294,6 @@ Global
 		{DA3613C6-0F35-492E-89DA-49560CA56BFF} = {C3FE487E-79AA-4071-B2C5-632116FC5BDE}
 		{B935F0E4-A28A-4022-8BB9-ED4041691072} = {C3FE487E-79AA-4071-B2C5-632116FC5BDE}
 		{B6A3BF75-641B-4398-A746-508572995972} = {6EE7ABD8-EA98-494F-B248-AA64F34CFD4B}
+		{934D1A96-BA4D-4FA4-8324-3B70646A8B4D} = {D5ED3B63-A99B-4C6F-9BEE-4C33DDD5D926}
 	EndGlobalSection
 EndGlobal
