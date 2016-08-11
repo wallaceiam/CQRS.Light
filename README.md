@@ -1,4 +1,4 @@
-# CQRS.Light 1.1.0.0
+# CQRS.Light 1.1.0.1
 ===
 A simple CQRS and Event Sourcing Framework
 
@@ -13,7 +13,9 @@ This is still very much work in progress.  If you do encounter any bugs please c
 * [CQRS.Light.Repository.InMemory](https://www.nuget.org/packages/CQRS.Light.Repository.InMemory/)
 * [CQRS.Light.Repository.MongoDB](https://www.nuget.org/packages/CQRS.Light.Repository.MongoDB/)
 
-##To install run these commands from NuGet Package Manager
+## Quick Start
+
+Install the nuget packages using the Nuget Package Manager or from the command line
 
 ```dos
 PM> Install-Package CQRS.Light.Contracts
@@ -22,4 +24,37 @@ PM> Install-Package CQRS.Light.Core
 PM> Install-Package CQRS.Light.Repository.InMemory
 OR
 PM> Install-Package CQRS.Light.Repository.MongoDB
+```
+
+
+### Commands
+
+#### Command Handler
+
+```csharp
+public class MyFirstCommandHandler : CommandHandler<MyFirstCommand>
+{
+
+}
+```
+
+#### Sending a Command
+
+```csharp
+public class MyFirstCommand
+{
+
+}
+```
+
+### Events
+
+#### Event Handler
+
+```csharp
+```
+
+#### Raising an Event
+
+```csharp
 ```
