@@ -53,6 +53,13 @@ namespace DDD.Light.Core.Tests
         }
 
         [TestMethod]
+        public void AggregateCache_ConfigureReallyDoesntLikeNulls()
+        {
+            var eventStore = new Mock<IEventStore>();
+            AggregateCache.Instance.Invoking(x => x.Configure(eventStore.Object, null)).ShouldThrow<ArgumentNullException>();
+        }
+
+        [TestMethod]
         public void AggregateCache_GetByIdAsyncWithoutConfigureShouldThrowException()
         {
             var guid = Guid.NewGuid();

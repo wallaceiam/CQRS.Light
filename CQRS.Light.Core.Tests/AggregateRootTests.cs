@@ -11,6 +11,12 @@ namespace DDD.Light.Core.Tests
     [TestClass]
     public class AggregateRootTests
     {
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            AggregateBus.Instance.Reset();
+        }
+
         [TestMethod]
         public void AggregateRoot_ConstructorShouldAssignValues()
         {
@@ -78,7 +84,6 @@ namespace DDD.Light.Core.Tests
         public void AggregateRoot_PublishAndApplyEventAsync2ShouldCallApplyEventIfExists()
         {
             var guid = Guid.NewGuid();
-            var @event = new TestEvent2();
             var eventBus = new Mock<IEventBus>();
             var aggregateBus = AggregateBus.Instance;
             aggregateBus.Configure(eventBus.Object);

@@ -95,7 +95,7 @@ namespace DDD.Light.Core.Tests
 
 
         [TestMethod]
-        public void AggregateBus_WillHandleAggregateCacheClearEvent()
+        public void AggregateBus_ShouldHandleAggregateCacheClearEvent()
         {
             var guid = Guid.NewGuid();
             var eventStore = new Mock<IEventStore>();

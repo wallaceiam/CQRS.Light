@@ -49,7 +49,8 @@ namespace CQRS.Light.Core
 
         private IRepository<TAggregate> GetRepository<TAggregate>() where TAggregate : IAggregateRoot
         {
-            var repo =  _getAggregateCacheRepositoryInstance(typeof(IRepository<TAggregate>)) as IRepository<TAggregate>;
+            var inst = _getAggregateCacheRepositoryInstance(typeof(IRepository<TAggregate>));
+            var repo =  inst as IRepository<TAggregate>;
             if (repo == null)
                 throw new InvalidOperationException(string.Format("No repository found for {0}", typeof(TAggregate)));
             return repo;
