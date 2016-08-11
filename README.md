@@ -26,35 +26,6 @@ OR
 PM> Install-Package CQRS.Light.Repository.MongoDB
 ```
 
+[Continue with the CQRS.Light Quickstart guide](https://github.com/wallaceiam/CQRS.Light/wiki/quickstart)
 
-### Commands
 
-#### Command Handler
-
-```csharp
-public class MyFirstCommandHandler : CommandHandler<MyFirstCommand>
-{
-
-}
-```
-
-#### Sending a Command
-
-```csharp
-public class MyFirstCommand
-{
-
-}
-```
-
-### Events
-
-#### Event Handler
-
-```csharp
-```
-
-#### Raising an Event
-
-```csharp
-```
