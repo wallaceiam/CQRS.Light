@@ -61,7 +61,6 @@
     </Compile>
     <Compile Include="AggregateBus.cs" />
     <Compile Include="AggregateCache.cs" />
-    <Compile Include="AggregateRoot.cs" />
     <Compile Include="CommandBus.cs" />
     <Compile Include="CommandHandler.cs" />
     <Compile Include="CommandHandlersDatabase.cs" />

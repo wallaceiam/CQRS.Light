@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("CQRS.Light.Core.Tests")]
+[assembly: AssemblyTitle("CQRS.Light.BDD")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("CQRS.Light.Core.Tests")]
+[assembly: AssemblyProduct("CQRS.Light.BDD")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("b6a3bf75-641b-4398-a746-508572995972")]
+[assembly: Guid("c2d9cb96-cf89-4701-b499-ea3cbed5148e")]
 
 // Version information for an assembly consists of the following four values:
 //

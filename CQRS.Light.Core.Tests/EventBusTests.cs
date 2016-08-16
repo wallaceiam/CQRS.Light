@@ -8,7 +8,7 @@ using CQRS.Light.Contracts;
 using Moq;
 using System.Collections.Generic;
 
-namespace DDD.Light.Core.Tests
+namespace CQRS.Light.Core.Tests
 {
     [TestClass]
     public class EventBusTests

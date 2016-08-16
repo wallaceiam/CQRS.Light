@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Moq;
 
-namespace DDD.Light.Core.Tests
+namespace CQRS.Light.Core.Tests
 {
     [TestClass]
     public class TransactionTests

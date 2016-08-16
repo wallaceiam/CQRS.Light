@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using CQRS.Light.Contracts;
 
-namespace DDD.Light.Core.Tests
+namespace CQRS.Light.Core.Tests
 {
     [TestClass]
     public class CommandBusTests

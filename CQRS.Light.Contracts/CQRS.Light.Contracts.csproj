@@ -57,6 +57,7 @@
     </Compile>
     <Compile Include="AggregateCacheCleared.cs" />
     <Compile Include="AggregateEvent.cs" />
+    <Compile Include="AggregateRoot.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="IAggregateBus.cs" />
     <Compile Include="IAggregateCache.cs" />

@@ -4,7 +4,7 @@ using Moq;
 using FluentAssertions;
 using CQRS.Light.Contracts;
 
-namespace DDD.Light.Core.Tests
+namespace CQRS.Light.Core.Tests
 {
     [TestClass]
     public class CommandHandlerTests

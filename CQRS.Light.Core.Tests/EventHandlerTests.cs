@@ -6,7 +6,7 @@ using CQRS.Light.Contracts;
 using CQRS.Light.Core;
 using System.Threading.Tasks;
 
-namespace DDD.Light.Core.Tests
+namespace CQRS.Light.Core.Tests
 {
     [TestClass]
     public class EventHandlerTests

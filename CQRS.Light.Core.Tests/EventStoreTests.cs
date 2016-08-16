@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DDD.Light.Core.Tests
+namespace CQRS.Light.Core.Tests
 {
     [TestClass]
     public class EventStoreTests

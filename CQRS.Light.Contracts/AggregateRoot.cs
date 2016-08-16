@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Reflection;
-using CQRS.Light.Contracts;
-using CQRS.Light.Core;
 using System.Threading.Tasks;
 
-namespace CQRS.Light.Core
+namespace CQRS.Light.Contracts
 {
     public abstract class AggregateRoot : Entity, IAggregateRoot
     {
@@ -37,7 +35,7 @@ namespace CQRS.Light.Core
         {
             try
             {
-                var publishMethod = typeof (AggregateBus).GetMethod("PublishAsync");
+                var publishMethod = typeof (IAggregateBus).GetMethod("PublishAsync");
                 var genericPublishMethod = publishMethod.MakeGenericMethod(new[] {GetType(), typeof (TEvent)});
                 var result = genericPublishMethod.Invoke(_aggregateBus, new[] { Id, @event as Object }) as Task;
                 await result;

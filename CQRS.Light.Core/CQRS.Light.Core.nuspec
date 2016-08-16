@@ -6,12 +6,12 @@
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
-    <licenseUrl>https://raw.github.com/wallaceiam/DDD.Light/master/MIT-LICENSE.txt</licenseUrl>
-    <projectUrl>https://github.com/wallaceiam/DDD.Light</projectUrl>
+    <licenseUrl>https://raw.github.com/wallaceiam/CQRS.Light/master/MIT-LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/wallaceiam/CQRS.Light</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>DDD.Light Core Implementation</description>
-    <releaseNotes>Initial Release</releaseNotes>
+    <description>CQRS.Light Core Implementation</description>
+    <releaseNotes>Working Release</releaseNotes>
     <copyright>Copyright 2016</copyright>
-    <tags>DDD.Light DDD Domain Driven Design CQRS Event Sourcing EventStore</tags>
+    <tags>CQRS.Light DDD Domain Driven Design CQRS Event Sourcing EventStore</tags>
   </metadata>
 </package>
