@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>https://raw.github.com/wallaceiam/CQRS.Light/master/MIT-LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/wallaceiam/CQRS.Light</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>An Azure DocumentDB Repository Implemenation</description>
+    <releaseNotes>Working Release</releaseNotes>
+    <copyright>Copyright 2016</copyright>
+    <tags>CQRS.Light DDD Domain Driven Design CQRS Event Sourcing EventStore</tags>
+  </metadata>
+</package>

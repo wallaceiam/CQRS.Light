@@ -44,6 +44,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CQRS.Light.Tutorial", "CQRS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CQRS.Light.Testing.MSTest", "CQRS.Light.Testing.MSTest\CQRS.Light.Testing.MSTest.csproj", "{F28C8AF7-56CD-48A8-B9C8-9B013E442084}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CQRS.Light.Repository.DocumentDB", "CQRS.Light.Repository.DocumentDB\CQRS.Light.Repository.DocumentDB.csproj", "{5CC78651-8F93-4A01-8C35-FA6A9443DF12}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -306,6 +308,24 @@ Global
 		{F28C8AF7-56CD-48A8-B9C8-9B013E442084}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{F28C8AF7-56CD-48A8-B9C8-9B013E442084}.Release|x86.ActiveCfg = Release|Any CPU
 		{F28C8AF7-56CD-48A8-B9C8-9B013E442084}.Release|x86.Build.0 = Release|Any CPU
+		{5CC78651-8F93-4A01-8C35-FA6A9443DF12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CC78651-8F93-4A01-8C35-FA6A9443DF12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CC78651-8F93-4A01-8C35-FA6A9443DF12}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{5CC78651-8F93-4A01-8C35-FA6A9443DF12}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{5CC78651-8F93-4A01-8C35-FA6A9443DF12}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5CC78651-8F93-4A01-8C35-FA6A9443DF12}.Debug|x86.Build.0 = Debug|Any CPU
+		{5CC78651-8F93-4A01-8C35-FA6A9443DF12}.Nuget|Any CPU.ActiveCfg = Nuget|Any CPU
+		{5CC78651-8F93-4A01-8C35-FA6A9443DF12}.Nuget|Any CPU.Build.0 = Nuget|Any CPU
+		{5CC78651-8F93-4A01-8C35-FA6A9443DF12}.Nuget|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{5CC78651-8F93-4A01-8C35-FA6A9443DF12}.Nuget|Mixed Platforms.Build.0 = Release|Any CPU
+		{5CC78651-8F93-4A01-8C35-FA6A9443DF12}.Nuget|x86.ActiveCfg = Release|Any CPU
+		{5CC78651-8F93-4A01-8C35-FA6A9443DF12}.Nuget|x86.Build.0 = Release|Any CPU
+		{5CC78651-8F93-4A01-8C35-FA6A9443DF12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CC78651-8F93-4A01-8C35-FA6A9443DF12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CC78651-8F93-4A01-8C35-FA6A9443DF12}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{5CC78651-8F93-4A01-8C35-FA6A9443DF12}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{5CC78651-8F93-4A01-8C35-FA6A9443DF12}.Release|x86.ActiveCfg = Release|Any CPU
+		{5CC78651-8F93-4A01-8C35-FA6A9443DF12}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
