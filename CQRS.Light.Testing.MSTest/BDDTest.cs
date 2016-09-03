@@ -53,6 +53,20 @@ namespace CQRS.Light.Testing.MSTest
             return this;
         }
 
+        public BDDTest<TAggregate> When(Action<TAggregate> command)
+        {
+            MoqAggregateBus.Instance.Reset();
+            try
+            {
+                command(aggregate);
+            }
+            catch (Exception ex)
+            {
+                this.exceptions.Add(ex);
+            }
+            return this;
+        }
+
         public BDDTest<TAggregate> ThenFailWith<TException>()
         {
             if (!this.exceptions.Any())
@@ -77,6 +91,19 @@ namespace CQRS.Light.Testing.MSTest
             return this;
         }
 
+        public BDDTest<TAggregate> Then(Action<TAggregate> command)
+        {
+            command(aggregate);
+
+            return this;
+        }
+
+        public BDDTest<TAggregate> Then(Func<TAggregate, bool> func)
+        {
+            Assert.IsTrue(func(aggregate));
+            return this;
+        }
+
         public BDDTest<TAggregate> AndThen<TEvent>(TEvent @event)
         {
             CheckForExceptions();
@@ -89,6 +116,12 @@ namespace CQRS.Light.Testing.MSTest
         {
             command(aggregate);
 
+            return this;
+        }
+
+        public BDDTest<TAggregate> AddThen(Func<TAggregate, bool> func)
+        {
+            Assert.IsTrue(func(aggregate));
             return this;
         }
 
