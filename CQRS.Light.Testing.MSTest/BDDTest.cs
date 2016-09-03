@@ -98,9 +98,12 @@ namespace CQRS.Light.Testing.MSTest
             return this;
         }
 
-        public BDDTest<TAggregate> Then(Func<TAggregate, bool> func)
+        public BDDTest<TAggregate> Then(Func<TAggregate, bool> func, string message = null)
         {
-            Assert.IsTrue(func(aggregate));
+            if (!string.IsNullOrWhiteSpace(message))
+                Assert.IsTrue(func(aggregate), message);
+            else
+                Assert.IsTrue(func(aggregate));
             return this;
         }
 
@@ -119,9 +122,12 @@ namespace CQRS.Light.Testing.MSTest
             return this;
         }
 
-        public BDDTest<TAggregate> AddThen(Func<TAggregate, bool> func)
+        public BDDTest<TAggregate> AndThen(Func<TAggregate, bool> func, string message = null)
         {
-            Assert.IsTrue(func(aggregate));
+            if (!string.IsNullOrWhiteSpace(message))
+                Assert.IsTrue(func(aggregate), message);
+            else
+                Assert.IsTrue(func(aggregate));
             return this;
         }
 
