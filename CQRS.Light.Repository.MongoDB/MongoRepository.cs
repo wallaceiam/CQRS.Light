@@ -20,6 +20,14 @@ namespace CQRS.Light.Repository.MongoDB
             _collection = database.GetCollection<TAggregate>(collectionName);
         }
 
+        public MongoRepository(string connectionString, string collectionName)
+        {
+            var url = new MongoUrl(connectionString);
+            var client = MongoPool.Instance.GetClient(connectionString);
+            var database = client.GetDatabase(url.DatabaseName);
+            _collection = database.GetCollection<TAggregate>(collectionName);
+        }
+
         public async Task<TAggregate> GetByIdAsync(Guid id)
         {
             var filter = Builders<TAggregate>.Filter.Eq(s => s.Id, id);
@@ -48,7 +56,7 @@ namespace CQRS.Light.Repository.MongoDB
         public async Task SaveAsync(TAggregate item)
         {
             var filter = Builders<TAggregate>.Filter.Eq(s => s.Id, item.Id);
-            var result = await _collection.ReplaceOneAsync(filter, item);
+            var result = await _collection.ReplaceOneAsync(filter, item, options: new UpdateOptions() { IsUpsert = true });
         }
 
         public Task SaveAllAsync(IEnumerable<TAggregate> items)

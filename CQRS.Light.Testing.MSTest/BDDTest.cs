@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Newtonsoft.Json;
+using System.Reflection;
 
 namespace CQRS.Light.Testing.MSTest
 {
@@ -16,8 +17,11 @@ namespace CQRS.Light.Testing.MSTest
         [TestInitialize]
         public void TestInitialize()
         {
-            //aggregate = new TAggregate();
-            aggregate = (TAggregate)Activator.CreateInstance(typeof(TAggregate), MoqAggregateBus.Instance);
+            var constructors = (typeof(TAggregate)).GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance);
+            if (constructors.Length < 1)
+                throw new NotImplementedException(string.Format("Could not create {0}, no non-public constructor found.", typeof(TAggregate)));
+            aggregate = (TAggregate)constructors[0].Invoke(new object[] { MoqAggregateBus.Instance });
+            
             exceptions = new List<Exception>();
         }
 
